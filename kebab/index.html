@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Kebab Anatolia Ede, voorbeeldsite</title>
+<meta name="description" content="Voorbeeldsite door Webtimmer voor een fictieve kebabzaak in Ede: döner, dürüm, kapsalon en lahmacun, vers gesneden. Bestel via WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#0F0A08; --ground-2:#1A1210; --paper:#221814; --paper-2:#33241D;
+  --ink:#F5F5F5; --ink-soft:#D0CCC8;
+  --accent:#DC1C1C; --accent-ink:#FFF6EC; --cream:#F2F2F2;
+  --display:"Anton",Impact,sans-serif; --text:"Archivo",system-ui,sans-serif; --cut:26px;
+  --s-small:.9375rem; --s-body:clamp(1.0625rem,1.02rem + .25vw,1.25rem);
+  --s-lead:clamp(1.25rem,1.1rem + .7vw,1.625rem);
+  --s-head:clamp(2.75rem,1.4rem + 5vw,6.5rem);
+  --m:clamp(20px,3vw,40px);
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{background:var(--ground);color:var(--ink);font:400 var(--s-body)/1.5 var(--text);-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{display:block;max-width:100%;height:auto;filter:sepia(.35) saturate(1.15) contrast(1.1)}
+p{max-width:60ch}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:0;line-height:.9}
+.chamfer,.mcard,.tray,.panel,.cbox{clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)))}
+:focus-visible{outline:3px solid var(--cream);outline-offset:3px}
+[data-scene]{--p:.5}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 26px;background:var(--accent);color:var(--accent-ink);font:600 max(var(--s-body),1.15rem)/1 var(--text);text-decoration:none;border:0;cursor:pointer;transition:transform .2s,background .2s}
+.btn:hover{background:#F03A3A;transform:translateY(-2px)}
+.btn:active{transform:translateY(1px)}
+.btn.dark{background:#1A0C08;color:#fff}.btn.dark:hover{background:#000}
+.btn.light{background:var(--cream);color:#1A0C08}.btn.light:hover{background:#fff}
+
+/* bar */
+.bar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 var(--m);height:64px;gap:16px;background:var(--ground)}
+.mark{font:400 1.75rem/1 var(--display);text-decoration:none;text-transform:uppercase}
+.bar nav{display:flex;gap:30px}
+.bar nav a{text-decoration:none;font-weight:600}
+.bar nav a:hover{text-decoration:underline;text-underline-offset:5px}
+.bar .btn{min-height:44px;padding:0 20px}
+
+/* 1 SNIJDEN: the spit between two words */
+.hero{height:300svh;position:relative}
+.stage{position:sticky;top:0;height:100svh;overflow:hidden}
+.hero-amb{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;filter:blur(46px) saturate(1.5) brightness(.5);opacity:.85;transform:scale(calc(1 + .08 * var(--p)))}
+.hero-frame{position:absolute;left:50%;top:calc(64px + 3svh);height:calc(100% - 64px - 6svh);aspect-ratio:9/16;max-width:96vw;transform:translateX(-50%);overflow:hidden;clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)));z-index:1}
+.hero-vid{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(.2) saturate(1.2) contrast(1.1) brightness(.9);transform:scale(calc(1.02 + .12 * var(--p)))}
+.vig{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+.grain{position:absolute;inset:-50%;width:200%;height:200%;z-index:3;pointer-events:none;opacity:.1;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.1 -.2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grain .9s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-5%)}60%{transform:translate(-5%,-2%)}80%{transform:translate(4%,4%)}100%{transform:translate(0,0)}}
+.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.5) saturate(1.2) contrast(1.15) brightness(.22);transform:scale(calc(1.25 - .25 * var(--p)))}
+.hero h1{position:absolute;inset:0;z-index:4;font-size:clamp(5rem,16vw,24rem);color:#fff;line-height:.8}
+.hero h1 .w{position:absolute;top:calc(49% - .4em);white-space:nowrap}
+.hero h1 .wl{right:calc(50% + 8vw);transform:translateX(calc(var(--p) * -7vw))}
+.hero h1 .wr{left:calc(50% + 8vw);transform:translateX(calc(var(--p) * 7vw))}
+.spit{z-index:2;position:absolute;left:50%;top:calc(50% + 32px);height:min(96svh,200vw);aspect-ratio:420/960;transform:translate(-50%,-50%) scale(calc(1 + .1 * var(--p)))}
+.spit-svg{width:100%;height:100%;display:block}
+.spit-roll{transform:translateX(calc(mod(var(--p) * 9, 1) * 40px))}
+.knife{position:absolute;left:-26%;width:62%;top:calc(14% + clamp(0,var(--p) / .62,1) * 50%);transform:rotate(calc(-8deg + sin(var(--p) * 40) * 5deg));transform-origin:100% 50%}
+.shave{position:absolute;--f:clamp(0,(var(--p) - var(--o)) * 1.9,1);opacity:clamp(0,(var(--p) - var(--o)) * 30,1);transform:translate(calc(var(--dx) * var(--f)),calc(var(--f) * 130svh)) rotate(calc(var(--f) * var(--rot)));filter:none}
+.shave svg{width:100%;display:block}
+.hero-copy{position:absolute;left:var(--m);bottom:var(--m);z-index:5;max-width:30ch}
+.hero-copy .lead{font-size:var(--s-lead);line-height:1.35;color:#fff;max-width:26ch;margin-bottom:24px}
+.hero-act{position:absolute;right:var(--m);bottom:var(--m);z-index:5;display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+
+/* 2 VULLEN: letters stretch, vegetables rain through them */
+.fill{height:340svh;position:relative}
+.fill .stage{background:var(--ground-2)}
+.fill-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.5) saturate(1.2) brightness(.2);transform:scale(calc(1.2 - .2 * var(--p)))}
+.warp{position:absolute;inset:0;font-size:min(24vw,44svh);line-height:.9;color:#fff;white-space:nowrap;z-index:4}
+.warp .wl,.warp .wr{position:absolute;top:calc(50% - .5em)}.warp .wl{right:calc(50% + 12vw)}.warp .wr{left:calc(50% + 12vw)}
+.gl{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:2;opacity:0;transition:opacity .7s}.gl.on{opacity:1}
+.hero.gl-ok .spit,.fill.gl-ok .layer,.fill.gl-ok .durum,.dish.gl-ok .durum-svg{display:none}
+.dish .gl{position:relative;inset:auto;aspect-ratio:1/1.05;height:auto;width:100%;clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)))}
+.warp i{display:inline-block;font:inherit;transform-origin:50% 100%;
+  transform:translateY(calc(sin(var(--p) * 14 + var(--i) * 1.1) * -4%)) scaleY(calc(1.02 + .3 * sin(var(--p) * 11 + var(--i) * 1.4))) skewX(calc(sin(var(--p) * 8 + var(--i) * .9) * 9deg))}
+.layer{position:absolute;inset:0;pointer-events:none}
+.layer.b{z-index:1;opacity:.6}.layer.f{z-index:3}
+.ing{position:absolute;top:-14svh;display:block;--f:clamp(0,(var(--p) - var(--o)) * 2.9,1);--e:clamp(0,(var(--f) - .84) * 6,1);
+  transform:translate(calc(var(--dx) * var(--f)),calc(var(--f) * 72svh)) rotate(calc(var(--f) * var(--rot))) scale(calc(1 - .45 * var(--e)));opacity:calc(1 - var(--e));filter:none}
+.ing svg{width:100%;display:block}
+.durum{position:absolute;left:50%;bottom:-3svh;width:min(34vw,380px,calc(54svh * .692));transform:translateX(-50%);z-index:4;--fill:clamp(0,(var(--p) - .1) * 1.15,1)}
+.durum-svg{width:100%;display:block}
+.heap{transform:translateY(calc((1 - var(--fill)) * 70px))}
+.fill-copy{position:absolute;left:var(--m);bottom:var(--m);z-index:5;max-width:26ch;font-size:var(--s-lead);line-height:1.35}
+.fill-list{position:absolute;right:var(--m);bottom:var(--m);z-index:5;text-align:right;font-size:var(--s-lead);line-height:1.35;max-width:20ch}
+
+/* 3 SAUS: red field, drips, wobbling word */
+.sauce{height:280svh;position:relative}
+.sauce .stage{background:var(--accent)}
+.pool{position:absolute;left:-2%;right:-2%;bottom:0;height:62svh;z-index:1;transform:translateY(calc((1 - clamp(0,(var(--p) - .12) * 1.3,1)) * 100%))}
+.pool svg{position:absolute;left:0;top:-39px;width:100%;height:40px;display:block}
+.pool i{position:absolute;inset:0;background:var(--cream)}
+.saus-word{position:absolute;left:0;right:0;top:50%;margin-top:-.4em;text-align:center;font-size:min(36vw,62svh);line-height:.8;color:#1A0C08;z-index:2;
+  transform:translateY(calc(sin(var(--p) * 18) * 2svh)) rotate(calc(sin(var(--p) * 12) * 1.6deg)) skewX(calc(sin(var(--p) * 9) * 5deg)) scaleY(calc(1 + sin(var(--p) * 14) * .05));filter:url(#liquid)}
+.drip{position:absolute;top:0;z-index:3;border-radius:0 0 999px 999px;height:var(--h);width:var(--w);left:var(--x);background:var(--c);
+  transform:translateY(calc((clamp(0,(var(--p) - var(--o)) * var(--k),1) - 1) * 100%))}
+.sauce-copy{position:absolute;left:var(--m);bottom:var(--m);z-index:5;max-width:24ch;font-size:var(--s-lead);line-height:1.3;color:#1A0C08;font-weight:600}
+.sauce-act{position:absolute;right:var(--m);bottom:var(--m);z-index:5}
+
+/* 4 BESTEL: the finished dish, the menu floats around it */
+.order{position:relative;padding:calc(64px + clamp(48px,6vw,96px)) var(--m) clamp(100px,12vw,180px);--e:1;background:var(--ground);overflow:hidden}
+.order-grid{position:relative;display:grid;grid-template-columns:1fr minmax(0,440px) 1fr;gap:clamp(16px,2.5vw,40px);align-items:center;max-width:1500px;margin:0 auto}
+.order h2{grid-column:1/-1;position:relative;z-index:3;text-align:center;font-size:min(24vw,380px);line-height:.85;color:#fff}
+.col{display:grid;gap:clamp(14px,1.8vw,24px);position:relative;z-index:4}
+.dish{position:relative;z-index:1;margin-top:calc(-1 * min(11vw,170px));display:grid;place-items:center;padding:0;transform:translateY(calc((1 - var(--e)) * 14vh))}
+.dish .durum-svg{width:min(100%,400px);position:relative;z-index:1}
+.dish .heap{transform:none}
+.mcard{background:var(--paper);padding:20px 24px 22px;display:grid;gap:10px;--s:calc(var(--i) % 3);
+  transform:translateX(calc((1 - var(--e)) * var(--side) * 12vw)) rotate(calc((1 - var(--e)) * var(--side) * 5deg))}
+.col.l .mcard{--side:-1}.col.r .mcard{--side:1}
+.mcard.sel{background:#3A1712}
+.mtop{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.mcard h3{font-size:clamp(1.6rem,1.2rem + 1vw,2.1rem)}
+.mcard b{font:400 1.6rem/1 var(--display)}
+.mcard p{font-size:var(--s-small);line-height:1.4;color:var(--ink-soft)}
+.step{display:inline-flex;align-items:center;gap:0;justify-self:start}
+.step button{width:46px;height:46px;border:0;background:var(--paper-2);color:var(--ink);font:600 1.5rem/1 var(--text);cursor:pointer;transition:background .15s,transform .15s}
+.step button:hover{background:var(--accent);transform:translateY(-2px)}
+.step button:active{transform:translateY(1px)}
+.step output{min-width:46px;text-align:center;font:400 1.6rem/46px var(--display)}
+.tray{position:relative;z-index:3;margin:clamp(32px,4vw,56px) auto 0;max-width:1180px;background:var(--paper);padding:clamp(24px,3vw,40px);display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,3vw,48px)}
+.tray h3{font-size:1.75rem;margin-bottom:14px}
+.tray fieldset{border:0;padding:0;margin-bottom:22px}
+.tray legend{font:400 1.75rem/1 var(--display);text-transform:uppercase;margin-bottom:14px}
+.drinks{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}
+.drink{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.drink span{font-weight:600;line-height:1.2}.drink b{font-weight:400;color:var(--ink-soft);display:block;font-size:var(--s-small)}
+.drink .step button{width:40px;height:40px}.drink .step output{min-width:34px;line-height:40px;font-size:1.4rem}
+.note{margin-top:12px;font-size:var(--s-small);color:var(--ink-soft)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{position:relative}
+.chips input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.chips span{display:inline-block;padding:12px 18px;background:var(--paper-2);font-weight:600;transition:background .15s,transform .15s}
+.chips label:hover span{transform:translateY(-2px)}
+.chips input:checked+span{background:var(--cream);color:#1A0C08}
+.chips input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+.total{display:grid;align-content:space-between;gap:20px;background:var(--ground-2);padding:clamp(20px,2.4vw,32px)}
+.total .sum{font:400 clamp(3.5rem,2.4rem + 4vw,6rem)/1 var(--display)}
+.total .lines{font-size:var(--s-small);line-height:1.5;color:var(--ink-soft);min-height:4.5em;white-space:pre-line}
+.total .btn{width:100%;min-height:60px}
+
+/* 5 vers gesneden: parallax collage */
+.vers{padding:clamp(120px,14vw,200px) var(--m) 0;max-width:1500px;margin:0 auto;display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,48px);align-items:start}
+.vers h2{grid-column:1/8;font-size:var(--s-head);align-self:end}
+.frame{overflow:hidden;position:relative}
+.frame video{width:100%;height:118%;object-fit:cover;display:block;filter:sepia(.25) saturate(1.2) contrast(1.1) brightness(.85);transform:translateY(calc(-14% * var(--r,.5)))}
+.frame img{width:100%;height:118%;object-fit:cover;filter:sepia(.4) saturate(1.2) contrast(1.1) brightness(.72);transform:translateY(calc(-14% * var(--r,.5)))}
+.vers .a{grid-column:9/13;aspect-ratio:4/5}
+.vers .b{grid-column:1/5;aspect-ratio:3/4;margin-top:clamp(0px,4vw,60px)}
+.vers .words{grid-column:6/13;display:grid;gap:clamp(24px,3vw,44px);align-self:center}
+.vers .words h3{font-size:clamp(2rem,1.4rem + 2vw,3.25rem);color:var(--cream);margin-bottom:8px}
+.vers .c{grid-column:3/13;aspect-ratio:21/9;margin-top:clamp(24px,4vw,64px)}
+.vers .d{grid-column:1/6;aspect-ratio:16/10}
+.vers .tail{grid-column:7/13;align-self:center;font-size:var(--s-lead);line-height:1.4}
+
+/* 6 tijden */
+.tijden{padding:clamp(120px,14vw,200px) var(--m) clamp(60px,6vw,100px);max-width:1500px;margin:0 auto;display:grid;grid-template-columns:6fr 5fr;gap:clamp(32px,6vw,96px);align-items:start}
+.tijden h2{font-size:var(--s-head);margin-bottom:28px}
+.hours{display:grid;grid-template-columns:auto 1fr;gap:6px 28px;font:400 clamp(1.75rem,1.1rem + 2.2vw,3rem)/1.15 var(--display);text-transform:uppercase;font-variant-numeric:tabular-nums}
+.hours dd{text-align:right}
+.hours .today{color:var(--accent)}
+.now{margin-top:24px;font-weight:600;font-size:var(--s-lead)}
+.panels{display:grid;gap:20px}
+.panel{background:var(--paper);padding:28px 32px 32px}
+.panel h3{font-size:2.25rem;margin-bottom:12px}
+.panel p+p{margin-top:.6em}
+
+/* 7 contact + closing line */
+.contact{position:relative;height:160svh}
+.contact .stage{display:grid;grid-template-columns:1fr minmax(0,430px);align-items:end;gap:var(--m);padding:90px var(--m) 72px}
+.contact .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.5) saturate(1.2) contrast(1.1) brightness(.4);transform:scale(calc(1.2 - .2 * var(--p))) translateX(calc(var(--p) * -3%))}
+.closing{position:relative;font-size:clamp(4.5rem,1rem + 15vw,18rem);color:#fff;line-height:.9;transform:translateY(calc((1 - var(--p)) * 12vh));z-index:2}
+.cbox{position:relative;z-index:2;align-self:start;background:var(--paper);padding:32px 32px 0}
+.cbox h3{font-size:2.25rem;margin-bottom:16px}
+.cbox address{font-style:normal;margin-bottom:14px}
+.cbox p{margin-bottom:14px}
+.cbox .btn{width:calc(100% + 64px);margin:8px -32px 0;min-height:60px}
+
+footer{background:var(--ground-2);padding:clamp(80px,9vw,140px) var(--m) 32px;overflow:hidden}
+.big{font:400 clamp(3.5rem,13.4vw,17rem)/.9 var(--display);text-transform:uppercase;white-space:nowrap;color:#fff;transform:translateY(calc((1 - var(--p,1)) * 60px))}
+.imprint{margin-top:40px;font-size:var(--s-small);color:var(--ink-soft);max-width:75ch;line-height:1.6}
+.imprint a{color:var(--ink)}
+.imprint strong{color:var(--ink)}
+
+/* entrances */
+.js .in{opacity:0;transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0ms)}
+.js .in.on{opacity:1}
+.js .vers .in,.js .tijden .in,.js .cbox.in{transform:translateY(28px)}
+.js .vers .in.on,.js .tijden .in.on,.js .cbox.in.on{transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  .grain{animation:none}
+  .js .in{opacity:1;transition:none}.js .vers .in,.js .tijden .in,.js .cbox.in{transform:none}
+  html{scroll-behavior:auto}
+  .hero,.fill,.sauce,.contact{height:auto}.stage{position:relative;height:100svh;min-height:600px}
+  .btn,.step button,.chips span{transition:none}
+}
+
+/* tablet */
+@media (max-width:1000px){
+  .order-grid{grid-template-columns:1fr 1fr}
+  .dish{grid-column:1/-1;order:-1;transform:none}.order h2{order:-2}
+  .col .mcard,.mcard{transform:none}
+  .tray{grid-template-columns:1fr}
+  .vers h2{grid-column:1/-1}.vers .a{grid-column:7/13;grid-row:auto}.vers .b{grid-column:1/7}.vers .words{grid-column:1/-1}.vers .c{grid-column:1/-1}.vers .d{grid-column:1/8}.vers .tail{grid-column:1/-1}
+  .tijden{grid-template-columns:1fr}
+}
+/* phone */
+@media (max-width:760px){
+  .bar nav{display:none}
+  .hero h1{font-size:35vw;line-height:.8}
+  .hero h1 .w{left:0!important;right:0!important;text-align:center;transform:none!important}
+  .hero h1 .wl{top:calc(64px + 8svh)}.hero h1 .wr{top:auto;bottom:calc(var(--m) + 250px)}
+  .spit{height:62svh;top:calc(50% - 2svh)}
+  .hero-copy{max-width:none;right:var(--m)}.hero-copy .lead{margin-bottom:14px;font-size:1.125rem}
+  .hero-act{left:var(--m);right:var(--m);justify-content:flex-start;bottom:var(--m)}
+  .hero-copy{bottom:calc(var(--m) + 128px)}.hero-act{flex-direction:column;align-items:flex-start}
+  .warp{font-size:34vw}.warp .wl,.warp .wr{left:0;right:0;text-align:center}.warp .wl{top:calc(64px + 6svh)}.warp .wr{top:auto;bottom:16svh}
+  .durum{width:min(66vw,calc(46svh * .692))}
+  .fill-copy{display:none}.fill-list{left:var(--m);text-align:left;font-size:1.0625rem;bottom:calc(var(--m) + 4svh);max-width:none}
+  .sauce-copy{font-size:1.0625rem;max-width:30ch;bottom:calc(var(--m) + 74px)}.sauce-act{left:var(--m)}
+  .order-grid{grid-template-columns:1fr}
+  .drinks{grid-template-columns:1fr}
+  .vers .a{grid-column:5/13}.vers .b{grid-column:1/8}.vers .d{grid-column:1/-1}.vers .c{aspect-ratio:4/3}
+  .contact .stage{grid-template-columns:1fr;align-content:end}
+  .closing{font-size:25vw;position:absolute;left:var(--m);top:calc(64px + 6svh)}
+  .cbox{margin-top:0;padding:24px 24px 0}.cbox .btn{width:calc(100% + 48px);margin:8px -24px 0}
+  .panel{padding:24px}
+  .tray{padding:22px}
+}
+</style>
+</head>
+<body>
+<script>document.body.classList.add('js')</script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="liquid" x="-5%" y="-10%" width="110%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".008 .02" numOctaves="2" seed="4" result="n"/><feDisplacementMap id="disp" in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+
+<header class="bar">
+  <a class="mark" href="#top">Kebab Anatolia</a>
+  <nav aria-label="Hoofdmenu"><a href="#bestel">Menu</a><a href="#vers">Verhaal</a><a href="#tijden">Openingstijden</a><a href="#contact">Contact</a></nav>
+  <a class="btn" href="#bestel">Bestel</a>
+</header>
+
+<main>
+  <section class="hero" id="top" data-scene aria-label="Döner vers">
+    <div class="stage">
+      <video class="hero-amb" src="assets/spit-fire.mp4" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
+      <div class="hero-frame"><video class="hero-vid" src="assets/spit-fire.mp4" poster="assets/spit-fire-poster.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video></div>
+      <canvas class="vig" aria-hidden="true"></canvas><div class="grain" aria-hidden="true"></div>
+      <h1><span class="w wl">Döner</span><span class="w wr">Vers</span></h1>
+      <div class="hero-copy"><p class="lead">Kebab Anatolia in Ede. Elke dag een verse spit, gesneden terwijl je wacht.</p></div>
+      <div class="hero-act"><a class="btn" href="#bestel">Bekijk het menu en bestel</a><a class="btn light" href="tel:+31600000000">Bel ons: 06 00 00 00 00</a></div>
+      </div>
+  </section>
+
+  <section class="fill" id="vullen" data-scene aria-label="Vullen">
+    <div class="stage">
+      <img class="fill-bg" src="assets/spice-market-in-istanbul.jpg" alt="" width="1500" height="2000">
+      <canvas class="gl" id="gl-fill" aria-hidden="true"></canvas>
+      <div class="layer b" aria-hidden="true"><i class="ing" style="left:46.9%;width:51px;--o:0.062;--dx:0.9vw;--rot:32deg"><svg viewBox="0 0 100 100"><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></svg></i><i class="ing" style="left:37.9%;width:53px;--o:0.109;--dx:3.6vw;--rot:21deg"><svg viewBox="0 0 100 100"><path d="M6 60C10 34 40 18 70 26C88 30 96 48 92 62C80 52 60 50 40 62C26 70 14 70 6 60Z" fill="#8A4620"/><path d="M10 58C20 40 44 30 70 32C84 35 90 44 90 52C74 46 54 50 38 60C26 66 16 66 10 58Z" fill="#A85C2A"/><path d="M26 52C40 42 62 40 80 44" stroke="#5A2A12" stroke-width="4" fill="none"/><circle cx="64" cy="40" r="3" fill="#C23A1D"/></svg></i><i class="ing" style="left:18.2%;width:53px;--o:0.156;--dx:9.5vw;--rot:29deg"><svg viewBox="0 0 100 100"><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></svg></i><i class="ing" style="left:92.9%;width:67px;--o:0.204;--dx:-12.9vw;--rot:253deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#C99AC0" stroke-width="9"/><circle cx="50" cy="50" r="30" fill="none" stroke="#EFE0EC" stroke-width="7"/><circle cx="50" cy="50" r="19" fill="none" stroke="#D8B3D0" stroke-width="5"/></svg></i><i class="ing" style="left:12.1%;width:49px;--o:0.251;--dx:11.4vw;--rot:-79deg"><svg viewBox="0 0 100 100"><g fill="#C8321A"><path d="M20 30l12-6 6 10-12 6z"/><path d="M52 18l10 4-2 12-10-4z"/><path d="M72 46l12 2-2 11-12-3z"/><path d="M34 62l11-3 5 10-11 4z"/><path d="M62 74l9 5-6 9-9-5z"/><path d="M14 70l8-2 3 8-8 3z"/></g><g fill="#8E1B0E"><path d="M46 44l7 2-2 7-7-2z"/><path d="M78 24l6 3-3 6-6-3z"/></g></svg></i><i class="ing" style="left:36.8%;width:46px;--o:0.298;--dx:4.0vw;--rot:-220deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#C99AC0" stroke-width="9"/><circle cx="50" cy="50" r="30" fill="none" stroke="#EFE0EC" stroke-width="7"/><circle cx="50" cy="50" r="19" fill="none" stroke="#D8B3D0" stroke-width="5"/></svg></i><i class="ing" style="left:67.0%;width:81px;--o:0.34600000000000003;--dx:-5.1vw;--rot:29deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></svg></i><i class="ing" style="left:86.0%;width:82px;--o:0.39299999999999996;--dx:-10.8vw;--rot:203deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#3F7A2C"/><circle cx="50" cy="50" r="37" fill="#CFE5A0"/><g fill="#8FBE5A"><ellipse cx="50" cy="30" rx="5" ry="9"/><ellipse cx="68" cy="58" rx="5" ry="9" transform="rotate(120 68 58)"/><ellipse cx="32" cy="58" rx="5" ry="9" transform="rotate(240 32 58)"/></g></svg></i><i class="ing" style="left:51.5%;width:54px;--o:0.441;--dx:-0.4vw;--rot:135deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></svg></i><i class="ing" style="left:63.1%;width:49px;--o:0.488;--dx:-3.9vw;--rot:31deg"><svg viewBox="0 0 100 100"><g fill="#C8321A"><path d="M20 30l12-6 6 10-12 6z"/><path d="M52 18l10 4-2 12-10-4z"/><path d="M72 46l12 2-2 11-12-3z"/><path d="M34 62l11-3 5 10-11 4z"/><path d="M62 74l9 5-6 9-9-5z"/><path d="M14 70l8-2 3 8-8 3z"/></g><g fill="#8E1B0E"><path d="M46 44l7 2-2 7-7-2z"/><path d="M78 24l6 3-3 6-6-3z"/></g></svg></i><i class="ing" style="left:62.0%;width:41px;--o:0.535;--dx:-3.6vw;--rot:71deg"><svg viewBox="0 0 100 100"><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></svg></i><i class="ing" style="left:78.1%;width:67px;--o:0.583;--dx:-8.4vw;--rot:198deg"><svg viewBox="0 0 100 100"><path d="M6 60C10 34 40 18 70 26C88 30 96 48 92 62C80 52 60 50 40 62C26 70 14 70 6 60Z" fill="#8A4620"/><path d="M10 58C20 40 44 30 70 32C84 35 90 44 90 52C74 46 54 50 38 60C26 66 16 66 10 58Z" fill="#A85C2A"/><path d="M26 52C40 42 62 40 80 44" stroke="#5A2A12" stroke-width="4" fill="none"/><circle cx="64" cy="40" r="3" fill="#C23A1D"/></svg></i></div>
+      <h2 class="warp" aria-label="Vullen"><span class="wl"><i aria-hidden="true" style="--i:0">V</i><i aria-hidden="true" style="--i:1">u</i><i aria-hidden="true" style="--i:2">l</i></span><span class="wr"><i aria-hidden="true" style="--i:3">l</i><i aria-hidden="true" style="--i:4">e</i><i aria-hidden="true" style="--i:5">n</i></span></h2>
+      <div class="layer f" aria-hidden="true"><i class="ing" style="left:30.5%;width:43px;--o:0.03;--dx:14.6vw;--rot:286deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></svg></i><i class="ing" style="left:58.0%;width:63px;--o:0.046;--dx:-6.0vw;--rot:-57deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#C99AC0" stroke-width="9"/><circle cx="50" cy="50" r="30" fill="none" stroke="#EFE0EC" stroke-width="7"/><circle cx="50" cy="50" r="19" fill="none" stroke="#D8B3D0" stroke-width="5"/></svg></i><i class="ing" style="left:59.2%;width:51px;--o:0.077;--dx:-6.9vw;--rot:-206deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#3F7A2C"/><circle cx="50" cy="50" r="37" fill="#CFE5A0"/><g fill="#8FBE5A"><ellipse cx="50" cy="30" rx="5" ry="9"/><ellipse cx="68" cy="58" rx="5" ry="9" transform="rotate(120 68 58)"/><ellipse cx="32" cy="58" rx="5" ry="9" transform="rotate(240 32 58)"/></g></svg></i><i class="ing" style="left:60.6%;width:44px;--o:0.09300000000000001;--dx:-7.9vw;--rot:-182deg"><svg viewBox="0 0 100 100"><g fill="#C8321A"><path d="M20 30l12-6 6 10-12 6z"/><path d="M52 18l10 4-2 12-10-4z"/><path d="M72 46l12 2-2 11-12-3z"/><path d="M34 62l11-3 5 10-11 4z"/><path d="M62 74l9 5-6 9-9-5z"/><path d="M14 70l8-2 3 8-8 3z"/></g><g fill="#8E1B0E"><path d="M46 44l7 2-2 7-7-2z"/><path d="M78 24l6 3-3 6-6-3z"/></g></svg></i><i class="ing" style="left:41.9%;width:83px;--o:0.125;--dx:6.1vw;--rot:-151deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></svg></i><i class="ing" style="left:65.1%;width:48px;--o:0.141;--dx:-11.3vw;--rot:-214deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#C99AC0" stroke-width="9"/><circle cx="50" cy="50" r="30" fill="none" stroke="#EFE0EC" stroke-width="7"/><circle cx="50" cy="50" r="19" fill="none" stroke="#D8B3D0" stroke-width="5"/></svg></i><i class="ing" style="left:60.5%;width:35px;--o:0.172;--dx:-7.9vw;--rot:248deg"><svg viewBox="0 0 100 100"><g fill="#C8321A"><path d="M20 30l12-6 6 10-12 6z"/><path d="M52 18l10 4-2 12-10-4z"/><path d="M72 46l12 2-2 11-12-3z"/><path d="M34 62l11-3 5 10-11 4z"/><path d="M62 74l9 5-6 9-9-5z"/><path d="M14 70l8-2 3 8-8 3z"/></g><g fill="#8E1B0E"><path d="M46 44l7 2-2 7-7-2z"/><path d="M78 24l6 3-3 6-6-3z"/></g></svg></i><i class="ing" style="left:52.1%;width:67px;--o:0.188;--dx:-1.6vw;--rot:108deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></svg></i><i class="ing" style="left:63.1%;width:42px;--o:0.21899999999999997;--dx:-9.8vw;--rot:-195deg"><svg viewBox="0 0 100 100"><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></svg></i><i class="ing" style="left:44.3%;width:59px;--o:0.235;--dx:4.3vw;--rot:-288deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#3F7A2C"/><circle cx="50" cy="50" r="37" fill="#CFE5A0"/><g fill="#8FBE5A"><ellipse cx="50" cy="30" rx="5" ry="9"/><ellipse cx="68" cy="58" rx="5" ry="9" transform="rotate(120 68 58)"/><ellipse cx="32" cy="58" rx="5" ry="9" transform="rotate(240 32 58)"/></g></svg></i><i class="ing" style="left:47.1%;width:61px;--o:0.267;--dx:2.2vw;--rot:268deg"><svg viewBox="0 0 100 100"><path d="M6 60C10 34 40 18 70 26C88 30 96 48 92 62C80 52 60 50 40 62C26 70 14 70 6 60Z" fill="#8A4620"/><path d="M10 58C20 40 44 30 70 32C84 35 90 44 90 52C74 46 54 50 38 60C26 66 16 66 10 58Z" fill="#A85C2A"/><path d="M26 52C40 42 62 40 80 44" stroke="#5A2A12" stroke-width="4" fill="none"/><circle cx="64" cy="40" r="3" fill="#C23A1D"/></svg></i><i class="ing" style="left:58.1%;width:70px;--o:0.28300000000000003;--dx:-6.1vw;--rot:-102deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></svg></i><i class="ing" style="left:66.5%;width:54px;--o:0.314;--dx:-12.4vw;--rot:-186deg"><svg viewBox="0 0 100 100"><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></svg></i><i class="ing" style="left:55.3%;width:41px;--o:0.33;--dx:-4.0vw;--rot:-274deg"><svg viewBox="0 0 100 100"><g fill="#C8321A"><path d="M20 30l12-6 6 10-12 6z"/><path d="M52 18l10 4-2 12-10-4z"/><path d="M72 46l12 2-2 11-12-3z"/><path d="M34 62l11-3 5 10-11 4z"/><path d="M62 74l9 5-6 9-9-5z"/><path d="M14 70l8-2 3 8-8 3z"/></g><g fill="#8E1B0E"><path d="M46 44l7 2-2 7-7-2z"/><path d="M78 24l6 3-3 6-6-3z"/></g></svg></i><i class="ing" style="left:63.1%;width:69px;--o:0.36200000000000004;--dx:-9.8vw;--rot:252deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#C99AC0" stroke-width="9"/><circle cx="50" cy="50" r="30" fill="none" stroke="#EFE0EC" stroke-width="7"/><circle cx="50" cy="50" r="19" fill="none" stroke="#D8B3D0" stroke-width="5"/></svg></i><i class="ing" style="left:34.7%;width:63px;--o:0.377;--dx:11.5vw;--rot:89deg"><svg viewBox="0 0 100 100"><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></svg></i><i class="ing" style="left:53.8%;width:53px;--o:0.409;--dx:-2.8vw;--rot:281deg"><svg viewBox="0 0 100 100"><g fill="#C8321A"><path d="M20 30l12-6 6 10-12 6z"/><path d="M52 18l10 4-2 12-10-4z"/><path d="M72 46l12 2-2 11-12-3z"/><path d="M34 62l11-3 5 10-11 4z"/><path d="M62 74l9 5-6 9-9-5z"/><path d="M14 70l8-2 3 8-8 3z"/></g><g fill="#8E1B0E"><path d="M46 44l7 2-2 7-7-2z"/><path d="M78 24l6 3-3 6-6-3z"/></g></svg></i><i class="ing" style="left:51.9%;width:76px;--o:0.425;--dx:-1.5vw;--rot:-297deg"><svg viewBox="0 0 100 100"><path d="M6 60C10 34 40 18 70 26C88 30 96 48 92 62C80 52 60 50 40 62C26 70 14 70 6 60Z" fill="#8A4620"/><path d="M10 58C20 40 44 30 70 32C84 35 90 44 90 52C74 46 54 50 38 60C26 66 16 66 10 58Z" fill="#A85C2A"/><path d="M26 52C40 42 62 40 80 44" stroke="#5A2A12" stroke-width="4" fill="none"/><circle cx="64" cy="40" r="3" fill="#C23A1D"/></svg></i><i class="ing" style="left:52.0%;width:73px;--o:0.456;--dx:-1.5vw;--rot:286deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#C99AC0" stroke-width="9"/><circle cx="50" cy="50" r="30" fill="none" stroke="#EFE0EC" stroke-width="7"/><circle cx="50" cy="50" r="19" fill="none" stroke="#D8B3D0" stroke-width="5"/></svg></i><i class="ing" style="left:52.3%;width:76px;--o:0.47200000000000003;--dx:-1.7vw;--rot:-42deg"><svg viewBox="0 0 100 100"><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></svg></i><i class="ing" style="left:42.5%;width:50px;--o:0.504;--dx:5.6vw;--rot:-294deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></svg></i><i class="ing" style="left:31.0%;width:82px;--o:0.519;--dx:14.3vw;--rot:200deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#C99AC0" stroke-width="9"/><circle cx="50" cy="50" r="30" fill="none" stroke="#EFE0EC" stroke-width="7"/><circle cx="50" cy="50" r="19" fill="none" stroke="#D8B3D0" stroke-width="5"/></svg></i><i class="ing" style="left:53.8%;width:72px;--o:0.551;--dx:-2.8vw;--rot:297deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#3F7A2C"/><circle cx="50" cy="50" r="37" fill="#CFE5A0"/><g fill="#8FBE5A"><ellipse cx="50" cy="30" rx="5" ry="9"/><ellipse cx="68" cy="58" rx="5" ry="9" transform="rotate(120 68 58)"/><ellipse cx="32" cy="58" rx="5" ry="9" transform="rotate(240 32 58)"/></g></svg></i><i class="ing" style="left:41.1%;width:54px;--o:0.5670000000000001;--dx:6.7vw;--rot:90deg"><svg viewBox="0 0 100 100"><g fill="#C8321A"><path d="M20 30l12-6 6 10-12 6z"/><path d="M52 18l10 4-2 12-10-4z"/><path d="M72 46l12 2-2 11-12-3z"/><path d="M34 62l11-3 5 10-11 4z"/><path d="M62 74l9 5-6 9-9-5z"/><path d="M14 70l8-2 3 8-8 3z"/></g><g fill="#8E1B0E"><path d="M46 44l7 2-2 7-7-2z"/><path d="M78 24l6 3-3 6-6-3z"/></g></svg></i><i class="ing" style="left:35.6%;width:84px;--o:0.598;--dx:10.8vw;--rot:4deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></svg></i><i class="ing" style="left:52.7%;width:47px;--o:0.614;--dx:-2.0vw;--rot:-62deg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#C99AC0" stroke-width="9"/><circle cx="50" cy="50" r="30" fill="none" stroke="#EFE0EC" stroke-width="7"/><circle cx="50" cy="50" r="19" fill="none" stroke="#D8B3D0" stroke-width="5"/></svg></i></div>
+      <div class="durum"><svg class="durum-svg" viewBox="0 0 360 520" role="img" aria-label="Een dürüm in papier, tot de rand gevuld" xmlns="http://www.w3.org/2000/svg">
+<defs><clipPath id="heapclipa"><rect x="0" y="0" width="360" height="186"/></clipPath></defs>
+<path d="M58 172L305 172L262 500Q180 512 98 500Z" fill="#EFE2C6"/>
+<path d="M58 172L140 172L120 470L98 500Z" fill="#E1D0AA"/><path d="M262 500L305 172L250 172L222 506Z" fill="#CDBA92"/>
+<path d="M122 330h120v66H122z" fill="#D8321B"/><text x="182" y="378" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="30" fill="#FFF3DD">ANATOLIA</text>
+<path d="M98 440L262 440L255 500Q180 512 105 500Z" fill="#E1D0AA" opacity=".6"/>
+<ellipse cx="180" cy="172" rx="126" ry="42" fill="#CF9A58"/><ellipse cx="180" cy="170" rx="118" ry="37" fill="#E4B677"/>
+<ellipse cx="180" cy="171" rx="102" ry="28" fill="#2A140A"/>
+<g clip-path="url(#heapclipa)"><g class="heap"><g transform="translate(85 83) scale(0.7)"><g><path d="M6 60C10 34 40 18 70 26C88 30 96 48 92 62C80 52 60 50 40 62C26 70 14 70 6 60Z" fill="#8A4620"/><path d="M10 58C20 40 44 30 70 32C84 35 90 44 90 52C74 46 54 50 38 60C26 66 16 66 10 58Z" fill="#A85C2A"/><path d="M26 52C40 42 62 40 80 44" stroke="#5A2A12" stroke-width="4" fill="none"/><circle cx="64" cy="40" r="3" fill="#C23A1D"/></g></g><g transform="translate(162 70) scale(0.76)"><g><path d="M6 60C10 34 40 18 70 26C88 30 96 48 92 62C80 52 60 50 40 62C26 70 14 70 6 60Z" fill="#8A4620"/><path d="M10 58C20 40 44 30 70 32C84 35 90 44 90 52C74 46 54 50 38 60C26 66 16 66 10 58Z" fill="#A85C2A"/><path d="M26 52C40 42 62 40 80 44" stroke="#5A2A12" stroke-width="4" fill="none"/><circle cx="64" cy="40" r="3" fill="#C23A1D"/></g></g><g transform="translate(42 80) scale(0.76)"><g><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></g></g><g transform="translate(193 73) scale(0.78)"><g><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></g></g><g transform="translate(124 66) scale(0.52)"><g><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></g></g><g transform="translate(189 61) scale(0.5)"><g><circle cx="50" cy="50" r="42" fill="none" stroke="#C99AC0" stroke-width="9"/><circle cx="50" cy="50" r="30" fill="none" stroke="#EFE0EC" stroke-width="7"/><circle cx="50" cy="50" r="19" fill="none" stroke="#D8B3D0" stroke-width="5"/></g></g><g transform="translate(95 79) scale(0.42)"><g><circle cx="50" cy="50" r="44" fill="#3F7A2C"/><circle cx="50" cy="50" r="37" fill="#CFE5A0"/><g fill="#8FBE5A"><ellipse cx="50" cy="30" rx="5" ry="9"/><ellipse cx="68" cy="58" rx="5" ry="9" transform="rotate(120 68 58)"/><ellipse cx="32" cy="58" rx="5" ry="9" transform="rotate(240 32 58)"/></g></g></g><g transform="translate(137 37) scale(0.66)"><g><path d="M6 60C10 34 40 18 70 26C88 30 96 48 92 62C80 52 60 50 40 62C26 70 14 70 6 60Z" fill="#8A4620"/><path d="M10 58C20 40 44 30 70 32C84 35 90 44 90 52C74 46 54 50 38 60C26 66 16 66 10 58Z" fill="#A85C2A"/><path d="M26 52C40 42 62 40 80 44" stroke="#5A2A12" stroke-width="4" fill="none"/><circle cx="64" cy="40" r="3" fill="#C23A1D"/></g></g><g transform="translate(167 43) scale(0.46)"><g><g fill="#C8321A"><path d="M20 30l12-6 6 10-12 6z"/><path d="M52 18l10 4-2 12-10-4z"/><path d="M72 46l12 2-2 11-12-3z"/><path d="M34 62l11-3 5 10-11 4z"/><path d="M62 74l9 5-6 9-9-5z"/><path d="M14 70l8-2 3 8-8 3z"/></g><g fill="#8E1B0E"><path d="M46 44l7 2-2 7-7-2z"/><path d="M78 24l6 3-3 6-6-3z"/></g></g></g><g transform="translate(216 76) scale(0.44)"><g><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></g></g><g transform="translate(119 25) scale(0.62)"><g><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></g></g></g></g>
+<path d="M56 172Q180 250 304 172L296 190Q180 262 64 190Z" fill="#D9A765"/>
+<path d="M56 172Q180 250 304 172" stroke="#F0CB8F" stroke-width="5" fill="none"/>
+<g fill="#6B3A12" opacity=".5"><circle cx="110" cy="210" r="6"/><circle cx="200" cy="232" r="7"/><circle cx="262" cy="206" r="5"/><circle cx="150" cy="224" r="4"/></g>
+</svg></div>
+      <p class="fill-copy">Eerst het vlees, dan de groenten. Alles wordt die ochtend gesneden.</p>
+      <p class="fill-list">Tomaat, ui, ijsbergsla, komkommer, rode kool en chilivlokken.</p>
+    </div>
+  </section>
+
+  <section class="sauce" id="saus" data-scene aria-label="Saus">
+    <div class="stage">
+      <div class="pool" aria-hidden="true"><svg viewBox="0 0 1200 40" preserveAspectRatio="none"><path d="M0 40V20Q75 0 150 20T300 20T450 20T600 20T750 20T900 20T1050 20T1200 20V40Z" fill="#F2F2F2"/></svg><i></i></div>
+      <h2 class="saus-word" aria-label="Saus">Saus</h2>
+      <div aria-hidden="true">
+        <i class="drip" style="--x:8%;--w:46px;--h:62svh;--c:#F2F2F2;--o:.02;--k:1.6"></i>
+        <i class="drip" style="--x:21%;--w:30px;--h:38svh;--c:#8F1409;--o:.12;--k:1.5"></i>
+        <i class="drip" style="--x:34%;--w:58px;--h:78svh;--c:#F2F2F2;--o:.05;--k:1.4"></i>
+        <i class="drip" style="--x:49%;--w:34px;--h:46svh;--c:#8F1409;--o:.2;--k:1.5"></i>
+        <i class="drip" style="--x:61%;--w:52px;--h:70svh;--c:#F2F2F2;--o:.1;--k:1.5"></i>
+        <i class="drip" style="--x:75%;--w:36px;--h:52svh;--c:#8F1409;--o:.03;--k:1.7"></i>
+        <i class="drip" style="--x:87%;--w:44px;--h:60svh;--c:#F2F2F2;--o:.16;--k:1.5"></i>
+      </div>
+      <p class="sauce-copy">Knoflooksaus, chilisaus of allebei. Zelf gemaakt, elke dag vers.</p>
+      <div class="sauce-act"><a class="btn dark" href="#bestel">Naar het menu</a></div>
+    </div>
+  </section>
+
+  <section class="order" id="bestel" data-order aria-labelledby="bestel-h">
+    <div class="order-grid">
+      <h2 id="bestel-h">Bestel</h2>
+      <div class="col l"><article class="mcard in" style="--i:0"><div class="mtop"><h3>Döner broodje</h3><b>€7,50</b></div><p>Vers gesneden döner in Turks brood, sla, tomaat, ui en saus</p><div class="step" data-id="doner" data-price="7.5" data-name="Döner broodje"><button type="button" class="m" aria-label="Eén Döner broodje minder">−</button><output aria-label="Aantal Döner broodje">0</output><button type="button" class="p" aria-label="Eén Döner broodje erbij">+</button></div></article><article class="mcard in" style="--i:1"><div class="mtop"><h3>Dürüm döner</h3><b>€8,50</b></div><p>Dunne lavash, strak opgerold, met alle groenten</p><div class="step" data-id="durum" data-price="8.5" data-name="Dürüm döner"><button type="button" class="m" aria-label="Eén Dürüm döner minder">−</button><output aria-label="Aantal Dürüm döner">0</output><button type="button" class="p" aria-label="Eén Dürüm döner erbij">+</button></div></article><article class="mcard in" style="--i:2"><div class="mtop"><h3>Kapsalon</h3><b>€11,50</b></div><p>Frites, döner, gesmolten kaas, sla, tomaat en saus</p><div class="step" data-id="kapsalon" data-price="11.5" data-name="Kapsalon"><button type="button" class="m" aria-label="Eén Kapsalon minder">−</button><output aria-label="Aantal Kapsalon">0</output><button type="button" class="p" aria-label="Eén Kapsalon erbij">+</button></div></article></div>
+      <div class="dish" aria-hidden="false"><canvas class="gl" id="gl-dish" aria-hidden="true"></canvas><svg class="durum-svg" style="--fill:1" viewBox="0 0 360 520" role="img" aria-label="Een dürüm in papier, tot de rand gevuld" xmlns="http://www.w3.org/2000/svg">
+<defs><clipPath id="heapclipb"><rect x="0" y="0" width="360" height="186"/></clipPath></defs>
+<path d="M58 172L305 172L262 500Q180 512 98 500Z" fill="#EFE2C6"/>
+<path d="M58 172L140 172L120 470L98 500Z" fill="#E1D0AA"/><path d="M262 500L305 172L250 172L222 506Z" fill="#CDBA92"/>
+<path d="M122 330h120v66H122z" fill="#D8321B"/><text x="182" y="378" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="30" fill="#FFF3DD">ANATOLIA</text>
+<path d="M98 440L262 440L255 500Q180 512 105 500Z" fill="#E1D0AA" opacity=".6"/>
+<ellipse cx="180" cy="172" rx="126" ry="42" fill="#CF9A58"/><ellipse cx="180" cy="170" rx="118" ry="37" fill="#E4B677"/>
+<ellipse cx="180" cy="171" rx="102" ry="28" fill="#2A140A"/>
+<g clip-path="url(#heapclipb)"><g class="heap"><g transform="translate(85 83) scale(0.7)"><g><path d="M6 60C10 34 40 18 70 26C88 30 96 48 92 62C80 52 60 50 40 62C26 70 14 70 6 60Z" fill="#8A4620"/><path d="M10 58C20 40 44 30 70 32C84 35 90 44 90 52C74 46 54 50 38 60C26 66 16 66 10 58Z" fill="#A85C2A"/><path d="M26 52C40 42 62 40 80 44" stroke="#5A2A12" stroke-width="4" fill="none"/><circle cx="64" cy="40" r="3" fill="#C23A1D"/></g></g><g transform="translate(162 70) scale(0.76)"><g><path d="M6 60C10 34 40 18 70 26C88 30 96 48 92 62C80 52 60 50 40 62C26 70 14 70 6 60Z" fill="#8A4620"/><path d="M10 58C20 40 44 30 70 32C84 35 90 44 90 52C74 46 54 50 38 60C26 66 16 66 10 58Z" fill="#A85C2A"/><path d="M26 52C40 42 62 40 80 44" stroke="#5A2A12" stroke-width="4" fill="none"/><circle cx="64" cy="40" r="3" fill="#C23A1D"/></g></g><g transform="translate(42 80) scale(0.76)"><g><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></g></g><g transform="translate(193 73) scale(0.78)"><g><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></g></g><g transform="translate(124 66) scale(0.52)"><g><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></g></g><g transform="translate(189 61) scale(0.5)"><g><circle cx="50" cy="50" r="42" fill="none" stroke="#C99AC0" stroke-width="9"/><circle cx="50" cy="50" r="30" fill="none" stroke="#EFE0EC" stroke-width="7"/><circle cx="50" cy="50" r="19" fill="none" stroke="#D8B3D0" stroke-width="5"/></g></g><g transform="translate(95 79) scale(0.42)"><g><circle cx="50" cy="50" r="44" fill="#3F7A2C"/><circle cx="50" cy="50" r="37" fill="#CFE5A0"/><g fill="#8FBE5A"><ellipse cx="50" cy="30" rx="5" ry="9"/><ellipse cx="68" cy="58" rx="5" ry="9" transform="rotate(120 68 58)"/><ellipse cx="32" cy="58" rx="5" ry="9" transform="rotate(240 32 58)"/></g></g></g><g transform="translate(137 37) scale(0.66)"><g><path d="M6 60C10 34 40 18 70 26C88 30 96 48 92 62C80 52 60 50 40 62C26 70 14 70 6 60Z" fill="#8A4620"/><path d="M10 58C20 40 44 30 70 32C84 35 90 44 90 52C74 46 54 50 38 60C26 66 16 66 10 58Z" fill="#A85C2A"/><path d="M26 52C40 42 62 40 80 44" stroke="#5A2A12" stroke-width="4" fill="none"/><circle cx="64" cy="40" r="3" fill="#C23A1D"/></g></g><g transform="translate(167 43) scale(0.46)"><g><g fill="#C8321A"><path d="M20 30l12-6 6 10-12 6z"/><path d="M52 18l10 4-2 12-10-4z"/><path d="M72 46l12 2-2 11-12-3z"/><path d="M34 62l11-3 5 10-11 4z"/><path d="M62 74l9 5-6 9-9-5z"/><path d="M14 70l8-2 3 8-8 3z"/></g><g fill="#8E1B0E"><path d="M46 44l7 2-2 7-7-2z"/><path d="M78 24l6 3-3 6-6-3z"/></g></g></g><g transform="translate(216 76) scale(0.44)"><g><circle cx="50" cy="50" r="46" fill="#B8231A"/><circle cx="50" cy="50" r="40" fill="#E0412B"/><g fill="#F6A58A"><path d="M50 50L50 16A34 34 0 0 1 80 33Z"/><path d="M50 50L82 38A34 34 0 0 1 76 74Z"/><path d="M50 50L70 78A34 34 0 0 1 32 80Z"/><path d="M50 50L26 76A34 34 0 0 1 17 38Z"/><path d="M50 50L22 30A34 34 0 0 1 46 16Z"/></g><g fill="#F7D774"><circle cx="62" cy="30" r="3"/><circle cx="74" cy="50" r="3"/><circle cx="62" cy="68" r="3"/><circle cx="38" cy="68" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="40" cy="28" r="3"/></g></g></g><g transform="translate(119 25) scale(0.62)"><g><path d="M8 62C0 40 18 18 40 22C48 6 74 8 80 26C98 30 100 56 86 70C76 90 52 94 40 84C24 90 10 80 8 62Z" fill="#6FA32F"/><path d="M14 62C22 48 40 40 70 40" stroke="#B5D96B" stroke-width="5" fill="none"/><path d="M30 78C40 56 60 46 86 50" stroke="#A4CE55" stroke-width="4" fill="none"/></g></g></g></g>
+<path d="M56 172Q180 250 304 172L296 190Q180 262 64 190Z" fill="#D9A765"/>
+<path d="M56 172Q180 250 304 172" stroke="#F0CB8F" stroke-width="5" fill="none"/>
+<g fill="#6B3A12" opacity=".5"><circle cx="110" cy="210" r="6"/><circle cx="200" cy="232" r="7"/><circle cx="262" cy="206" r="5"/><circle cx="150" cy="224" r="4"/></g>
+</svg></div>
+      <div class="col r"><article class="mcard in" style="--i:3"><div class="mtop"><h3>Lahmacun</h3><b>€7,00</b></div><p>Turkse pizza, dun en knapperig, met sla en citroen</p><div class="step" data-id="lahmacun" data-price="7" data-name="Lahmacun"><button type="button" class="m" aria-label="Eén Lahmacun minder">−</button><output aria-label="Aantal Lahmacun">0</output><button type="button" class="p" aria-label="Eén Lahmacun erbij">+</button></div></article><article class="mcard in" style="--i:4"><div class="mtop"><h3>Falafel broodje</h3><b>€6,50</b></div><p>Vegetarisch, met hummus, komkommer en tomaat</p><div class="step" data-id="falafel" data-price="6.5" data-name="Falafel broodje"><button type="button" class="m" aria-label="Eén Falafel broodje minder">−</button><output aria-label="Aantal Falafel broodje">0</output><button type="button" class="p" aria-label="Eén Falafel broodje erbij">+</button></div></article><article class="mcard in" style="--i:5"><div class="mtop"><h3>Iskender</h3><b>€14,50</b></div><p>Döner op brood, tomatensaus, yoghurt en gesmolten boter</p><div class="step" data-id="iskender" data-price="14.5" data-name="Iskender"><button type="button" class="m" aria-label="Eén Iskender minder">−</button><output aria-label="Aantal Iskender">0</output><button type="button" class="p" aria-label="Eén Iskender erbij">+</button></div></article></div>
+    </div>
+    <form class="tray in" id="tray" onsubmit="return false" aria-label="Je bestelling">
+      <div>
+        <fieldset><legend>Drinken</legend><div class="drinks"><div class="drink"><span>Cola <b>€2,50</b></span><div class="step" data-id="cola" data-price="2.5" data-name="Cola"><button type="button" class="m" aria-label="Eén Cola minder">−</button><output aria-label="Aantal Cola">0</output><button type="button" class="p" aria-label="Eén Cola erbij">+</button></div></div><div class="drink"><span>Ayran <b>€2,50</b></span><div class="step" data-id="ayran" data-price="2.5" data-name="Ayran"><button type="button" class="m" aria-label="Eén Ayran minder">−</button><output aria-label="Aantal Ayran">0</output><button type="button" class="p" aria-label="Eén Ayran erbij">+</button></div></div><div class="drink"><span>Water <b>€2,00</b></span><div class="step" data-id="water" data-price="2" data-name="Water"><button type="button" class="m" aria-label="Eén Water minder">−</button><output aria-label="Aantal Water">0</output><button type="button" class="p" aria-label="Eén Water erbij">+</button></div></div><div class="drink"><span>Turkse thee <b>€2,00</b></span><div class="step" data-id="thee" data-price="2" data-name="Turkse thee"><button type="button" class="m" aria-label="Eén Turkse thee minder">−</button><output aria-label="Aantal Turkse thee">0</output><button type="button" class="p" aria-label="Eén Turkse thee erbij">+</button></div></div></div></fieldset>
+        <fieldset><legend>Saus</legend><div class="chips">
+          <label><input type="radio" name="saus" value="knoflook" checked><span>Knoflook</span></label>
+          <label><input type="radio" name="saus" value="chili"><span>Chili</span></label>
+          <label><input type="radio" name="saus" value="allebei"><span>Allebei</span></label>
+          <label><input type="radio" name="saus" value="geen"><span>Geen</span></label></div></fieldset>
+        <fieldset><legend>Afhalen of bezorgen</legend><div class="chips">
+          <label><input type="radio" name="mode" value="afhalen" checked><span>Afhalen</span></label>
+          <label><input type="radio" name="mode" value="bezorgen"><span>Bezorgen</span></label></div><p class="note">Bezorgen is gratis vanaf €15, daaronder betaal je €2,50 bezorgkosten.</p></fieldset>
+      </div>
+      <div class="total">
+        <div><p class="sum" id="sum" aria-live="polite">€0,00</p><p class="lines" id="lines" aria-live="polite">Kies hierboven wat je wilt eten.</p></div>
+        <a class="btn" id="wa" href="https://wa.me/31600000000?text=Hallo%20Kebab%20Anatolia%2C%20ik%20wil%20graag%20bestellen.">Bestel via WhatsApp</a>
+        <p class="lines" style="min-height:0">Je opent WhatsApp met je bestelling al ingevuld. Betalen doe je bij het afhalen of aan de deur.</p>
+      </div>
+    </form>
+  </section>
+
+  <section class="vers" id="vers">
+    <h2 class="in">Vers gesneden, per bestelling</h2>
+    <figure class="frame a" data-par><img src="assets/wrapped-lahmacun.jpg" alt="Twee in papier gewikkelde lahmacun-wraps" loading="lazy" width="1920" height="1280" style="object-position:35% 50%"></figure>
+    <figure class="frame b" data-par><img src="assets/spice-market-in-istanbul.jpg" alt="Kruidenkraam met stapels specerijen en noten op een markt in Istanbul" loading="lazy" width="1500" height="2000"></figure>
+    <div class="words">
+      <div class="in"><h3>Om negen uur gaat de spit aan</h3><p>Het vlees ligt in dunne lagen op de spit, gekruid met paprika, knoflook en een beetje yoghurt. Rond elf uur is de eerste kegel gaar en gaat de deur open.</p></div>
+      <div class="in" style="--d:80ms"><h3>Niets ligt vooraf klaar</h3><p>We snijden pas als jij bestelt. Daarom is het vlees warm, sappig en krijgt het aan de rand een korstje. De groenten gaan dezelfde ochtend door de snijmachine.</p></div>
+      <div class="in" style="--d:160ms"><h3>Het brood gaat kort over de grill</h3><p>Turks brood en lavash worden vlak voor het opmaken warm gemaakt, zodat ze zacht blijven en niet doorweken.</p></div>
+    </div>
+    <figure class="frame c" data-par><video src="assets/doner-slice.mp4" poster="assets/doner-slice-poster.jpg" muted loop playsinline preload="metadata" aria-label="Een mes snijdt dunne plakken van een draaiende döner-spit" style="object-position:50% 45%"></video></figure>
+    <figure class="frame d" data-par><img src="assets/lahmacun.jpg" alt="Lahmacun met peterselie, ui en een partje citroen op een bord" loading="lazy" width="1920" height="1397"></figure>
+    <p class="tail in">Naast döner maken we lahmacun, falafel en iskender. Alles wat je op het menu ziet kun je afhalen of laten bezorgen.</p>
+  </section>
+
+  <section class="tijden" id="tijden" aria-labelledby="tijden-h">
+    <div>
+      <h2 class="in" id="tijden-h">Openingstijden</h2>
+      <dl class="hours in" id="hours">
+        <dt>Maandag</dt><dd>11.00 – 22.00</dd>
+        <dt>Dinsdag</dt><dd>11.00 – 22.00</dd>
+        <dt>Woensdag</dt><dd>11.00 – 22.00</dd>
+        <dt>Donderdag</dt><dd>11.00 – 22.00</dd>
+        <dt>Vrijdag</dt><dd>11.00 – 23.00</dd>
+        <dt>Zaterdag</dt><dd>11.00 – 23.00</dd>
+        <dt>Zondag</dt><dd>12.00 – 22.00</dd>
+      </dl>
+      <p class="now" id="now" aria-live="polite"></p>
+    </div>
+    <div class="panels">
+      <div class="panel in"><h3>Afhalen</h3><p>Bestel via WhatsApp of bel. Je bestelling is binnen 10 tot 15 minuten klaar, ook als het druk is.</p><p>Betalen kan met pin of contant, bij het afhalen aan de balie.</p></div>
+      <div class="panel in" style="--d:100ms"><h3>Bezorgen</h3><p>In Ede en omgeving, tot ongeveer 4 kilometer. Gratis vanaf €15, daaronder €2,50. Meestal binnen 30 minuten.</p><p>Betalen doe je aan de deur, met pin of contant.</p></div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" data-scene aria-label="Contact">
+    <div class="stage">
+      <img class="bg" src="assets/spice-market-in-istanbul.jpg" alt="" loading="lazy" width="1500" height="2000" style="object-position:50% 70%">
+      <h2 class="closing">Kom <br>eten</h2>
+      <div class="cbox in">
+        <h3>Kebab Anatolia</h3>
+        <address>Proefstraat 7<br>6711 AB Ede</address>
+        <p><a href="tel:+31600000000">06 00 00 00 00</a><br><a href="mailto:info@example.com">info@example.com</a></p>
+        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Proefstraat+7+6711+AB+Ede">Route openen</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="big" data-foot>Kebab Anatolia</div>
+  <p class="imprint"><strong>Voorbeeldsite door Webtimmer, fictief bedrijf.</strong> Dit is geen echte kebabzaak; naam, adres, telefoonnummer en prijzen zijn verzonnen. Foto's: <a href="https://commons.wikimedia.org/w/index.php?curid=48324628">"Spice Market in Istanbul"</a> door Snapdragon66, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=92327328">"Wrapped Lahmacun"</a> door Garrett Ziegler, CC BY-SA 4.0; <a href="https://commons.wikimedia.org/w/index.php?curid=729105">"Lahmacun"</a> door Rainer Zenz (vermoedelijk), <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>. Via Wikimedia Commons en Openverse. Video: <a href="https://www.pexels.com/video/authentic-turkish-doner-kebap-on-rotisserie-34679289/">"Authentic Turkish Döner Kebap on Rotisserie"</a> door Sururi Ballıdağ en <a href="https://www.pexels.com/video/juicy-rotating-doner-kebab-on-grill-36122692/">"Juicy Rotating Doner Kebab on Grill"</a> door mehmetography, via Pexels (gratis te gebruiken). 3D-model van het broodje: <a href="https://polyhaven.com/a/hamburger_buns">"Hamburger Buns"</a> door Alexander Shulha, Poly Haven, CC0.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="assets/models/bun.js"></script>
+<script>/* Kebab Anatolia: the exploded bread (real scanned bun + drawn fillings), with a film finish. three.js r128 */
+(function () {
+  const T = window.THREE;
+  if (!T) return;
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+  const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+  const lerp = (a, b, t) => a + (b - a) * t;
+  let seed = 11;
+  const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  const R = (a, b) => a + (b - a) * rnd();
+  const TAU = Math.PI * 2;
+
+  function canvasTex(w, h, draw, srgb) {
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    draw(c.getContext('2d'), w, h);
+    const t = new T.CanvasTexture(c);
+    if (srgb !== false) t.encoding = T.sRGBEncoding;
+    t.wrapS = t.wrapT = T.RepeatWrapping; t.anisotropy = 4;
+    return t;
+  }
+  function meatTexture() {
+    return canvasTex(1024, 1024, (g, w, h) => {
+      g.fillStyle = '#6b3315'; g.fillRect(0, 0, w, h);
+      const pal = ['#74381a', '#82421d', '#8f4c22', '#5e2c12', '#9a5628', '#6f3718', '#a2602d'];
+      const per = TAU * 4 / w;
+      let y = -10;
+      while (y < h) {
+        const bh = R(30, 66);
+        g.fillStyle = pal[(rnd() * pal.length) | 0];
+        g.beginPath(); g.moveTo(0, y);
+        for (let x = 0; x <= w; x += 32) g.lineTo(x, y + Math.sin(x * per + y) * 6);
+        g.lineTo(w, y + bh + Math.sin(w * per + y + 1) * 6);
+        for (let x = w; x >= 0; x -= 32) g.lineTo(x, y + bh + Math.sin(x * per + y + 1) * 6);
+        g.closePath(); g.fill();
+        g.fillStyle = 'rgba(214,150,88,.55)'; g.fillRect(0, y + bh - 3, w, 3 + R(0, 3));
+        g.fillStyle = 'rgba(28,10,4,.5)'; g.fillRect(0, y + bh + 2, w, 3);
+        y += bh;
+      }
+      for (let i = 0; i < 5200; i++) {
+        const x = rnd() * w, yy = rnd() * h, r = R(.6, 2.6), k = rnd();
+        g.fillStyle = k < .4 ? 'rgba(25,10,4,.55)' : k < .68 ? 'rgba(205,66,32,.75)' : 'rgba(255,205,135,.38)';
+        g.beginPath(); g.ellipse(x, yy, r * R(1, 2.6), r, 0, 0, 7); g.fill();
+      }
+    });
+  }
+  function crumbTexture() {
+    return canvasTex(512, 512, (g, w, h) => {
+      g.fillStyle = '#efd9aa'; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 1600; i++) {
+        const x = rnd() * w, y = rnd() * h, r = R(2, 9);
+        g.fillStyle = rnd() < .5 ? 'rgba(196,150,88,.38)' : 'rgba(255,244,214,.55)';
+        g.beginPath(); g.ellipse(x, y, r, r * R(.5, 1), rnd() * 3, 0, 7); g.fill();
+      }
+    });
+  }
+  function crustTexture() {
+    return canvasTex(1024, 512, (g, w, h) => {
+      g.fillStyle = '#cf9048'; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 160; i++) {
+        const x = rnd() * w, y = rnd() * h * .7, r = R(20, 80);
+        const gr = g.createRadialGradient(x, y, 0, x, y, r);
+        gr.addColorStop(0, rnd() < .6 ? 'rgba(120,64,20,.38)' : 'rgba(250,200,120,.3)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+        g.fillStyle = gr; g.fillRect(x - r, y - r, 2 * r, 2 * r);
+      }
+    });
+  }
+  function tomatoTexture() {
+    return canvasTex(512, 512, (g) => {
+      g.fillStyle = '#c92b1c'; g.fillRect(0, 0, 512, 512);
+      g.fillStyle = '#dc4630'; g.beginPath(); g.arc(256, 256, 232, 0, 7); g.fill();
+      for (let i = 0; i < 5; i++) {
+        g.save(); g.translate(256, 256); g.rotate(i / 5 * TAU);
+        g.fillStyle = '#f2907a'; g.beginPath(); g.moveTo(0, 0); g.arc(0, 0, 200, -.46, .46); g.closePath(); g.fill();
+        g.fillStyle = '#f3d27a';
+        for (let k = 0; k < 5; k++) { g.beginPath(); g.ellipse(95 + k * 20, (k - 2) * 14, 7, 4, k, 0, 7); g.fill(); }
+        g.restore();
+      }
+      g.fillStyle = '#e8705a'; g.beginPath(); g.arc(256, 256, 34, 0, 7); g.fill();
+    });
+  }
+  function softTex(inner, outer) {
+    return canvasTex(128, 128, (g) => {
+      const gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+      gr.addColorStop(0, inner); gr.addColorStop(1, outer);
+      g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+    });
+  }
+
+  /* ---------- film finish: bloom, then tone map + vignette + grain + warm grade ---------- */
+  const GRADE = {
+    uniforms: { tDiffuse: { value: null }, time: { value: 0 } },
+    vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: [
+      'uniform sampler2D tDiffuse; uniform float time; varying vec2 vUv;',
+      'vec3 aces(vec3 x){ return clamp((x*(2.51*x+0.03))/(x*(2.43*x+0.59)+0.14),0.0,1.0); }',
+      'float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }',
+      'void main(){',
+      '  vec2 uv = vUv;',
+      '  uv.x += sin(uv.y * 60.0 + time * 3.0) * 0.0006 * smoothstep(0.55, 0.0, uv.y);', /* heat shimmer near the table */
+      '  vec3 c = texture2D(tDiffuse, uv).rgb;',
+      '  c = aces(c * .9);',
+      '  c = pow(c, vec3(1.0/2.2));',
+      '  c *= vec3(1.05, 1.0, 0.9);',
+      '  float v = smoothstep(0.92, 0.18, distance(vUv, vec2(0.5)) * 1.3);',
+      '  c *= mix(0.2, 1.0, v);',
+      '  c += (hash(vUv * vec2(1700.0, 1000.0) + fract(time) * 91.0) - 0.5) * 0.06;',
+      '  gl_FragColor = vec4(c, 1.0);',
+      '}'
+    ].join('\n')
+  };
+  function makeFX(renderer, scene, camera, w, h) {
+    if (!(T.EffectComposer && T.RenderPass && T.UnrealBloomPass && T.ShaderPass)) return null;
+    const composer = new T.EffectComposer(renderer);
+    composer.addPass(new T.RenderPass(scene, camera));
+    const bloom = new T.UnrealBloomPass(new T.Vector2(w, h), .42, .75, .86);
+    composer.addPass(bloom);
+    const grade = new T.ShaderPass(GRADE); grade.renderToScreen = true;
+    composer.addPass(grade);
+    return { composer, bloom, grade };
+  }
+
+  /* ---------- the scene ---------- */
+  function shaveGeometry() {
+    const g = new T.PlaneGeometry(.62, .2, 10, 2);
+    const p = g.attributes.position;
+    for (let i = 0; i < p.count; i++) {
+      const x = p.getX(i), y = p.getY(i);
+      p.setZ(i, .11 * Math.sin(x * 7) + .05 * Math.cos(y * 22 + x * 3));
+      p.setY(i, y * (1 + .5 * Math.sin(x * 5 + 1)));
+    }
+    g.computeVertexNormals();
+    return g;
+  }
+
+  function bread(canvas, mode) {
+    const dish = mode === 'dish';
+    const renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+    renderer.setClearColor(0x120b08, 1);
+    renderer.outputEncoding = T.sRGBEncoding;
+    renderer.localClippingEnabled = true;
+    renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap;
+    const scene = new T.Scene(); scene.background = new T.Color(0x120b08);
+    scene.fog = new T.Fog(0x120b08, 14, 34);
+    const camera = new T.PerspectiveCamera(30, 1.6, .1, 80);
+
+    // one warm key, a hot rim from behind, a little fill
+    scene.add(new T.HemisphereLight(0xffd0a0, 0x1a0e08, .3));
+    const key = new T.SpotLight(0xffc088, 2.3, 40, .55, .6, 1.2); key.position.set(-5, 8, 7); key.target.position.set(0, 1, 0);
+    key.castShadow = true; key.shadow.mapSize.set(1536, 1536); key.shadow.bias = -.0004; key.shadow.radius = 5;
+    scene.add(key); scene.add(key.target);
+    const rim = new T.DirectionalLight(0xff6a2b, 2.6); rim.position.set(5, 4, -6); scene.add(rim);
+    const rim2 = new T.DirectionalLight(0xffe2c4, 1.0); rim2.position.set(-6, 3, -5); scene.add(rim2);
+
+    const floor = new T.Mesh(new T.PlaneGeometry(60, 60), new T.MeshStandardMaterial({ color: 0x20140e, roughness: .42, metalness: .1 }));
+    floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+    // bokeh lights far behind, steam above the bread
+    const bokehTex = softTex('rgba(255,190,110,1)', 'rgba(255,120,40,0)');
+    const bokeh = [];
+    for (let i = 0; i < 46; i++) {
+      const s = new T.Sprite(new T.SpriteMaterial({ map: bokehTex, blending: T.AdditiveBlending, transparent: true, depthWrite: false, opacity: R(.05, .2), fog: false }));
+      const sc = R(.8, 2.6); s.scale.set(sc, sc, 1);
+      s.position.set(R(-14, 14), R(-1, 9), R(-18, -10)); s.userData = { x: s.position.x, y: s.position.y, ph: R(0, TAU), sp: R(.05, .15) };
+      scene.add(s); bokeh.push(s);
+    }
+    const steamTex = softTex('rgba(255,244,230,1)', 'rgba(255,244,230,0)');
+    const steam = [];
+    for (let i = 0; i < 38; i++) {
+      const s = new T.Sprite(new T.SpriteMaterial({ map: steamTex, transparent: true, depthWrite: false, opacity: 0, fog: false }));
+      s.userData = { x: R(-1.4, 1.4), z: R(-.6, .6), o: rnd(), sp: R(.14, .26), sw: R(.2, .5), ph: R(0, TAU) };
+      scene.add(s); steam.push(s);
+    }
+
+    const root = new T.Group(); scene.add(root);
+    const hinge = new T.Group(); root.add(hinge);
+    const bottom = new T.Group(); root.add(bottom);
+    const ing = new T.Group(); ing.scale.setScalar(1.3); root.add(ing);
+    const crumb = crumbTexture();
+    const crumbMat = new T.MeshStandardMaterial({ map: crumb, color: 0xc9b496, roughness: .92 });
+    let BW = 4, BD = 1.9, clipPairs = [], ready = false, readyCbs = [];
+
+    // the ingredients: drawn, lit and shadowed like the bun
+    const meatTex = meatTexture(); meatTex.repeat.set(.4, .4);
+    const meatMat = new T.MeshStandardMaterial({ map: meatTex, bumpMap: meatTex, bumpScale: 1.2, color: 0xe0a86e, roughness: .5, side: T.DoubleSide });
+    const tomTex = tomatoTexture();
+    const sg = shaveGeometry();
+    const items = [];
+    const flat = -Math.PI / 2;
+    function add(mesh, layer, rest, restRot, ex, exRot) {
+      mesh.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } }); mesh.userData.s0 = mesh.scale.x;
+      ing.add(mesh);
+      items.push({ m: mesh, layer, rest: new T.Vector3(...rest), restRot: new T.Euler(...restRot), ex: new T.Vector3(...ex), exRot: new T.Euler(...exRot), ph: R(0, TAU), d: layer * .03 + R(0, .03) });
+    }
+    const LY = [1.2, 1.85, 2.5, 3.1, 3.7, 4.35];
+    for (let i = 0; i < 12; i++) {
+      const m = new T.Mesh(sg, meatMat); m.scale.setScalar(R(1.5, 2.1));
+      add(m, 0, [R(-.95, .95), .08 + (i % 3) * .035, R(-.38, .38)], [flat, 0, R(-.5, .5)],
+        [R(-1.25, 1.25), LY[0] + R(-.12, .12), R(-.5, .5)], [flat + R(.75, 1.15), R(-.4, .4), R(-.8, .8)]);
+    }
+    for (let i = 0; i < 4; i++) {
+      const g = new T.RingGeometry(.03, .82, 56, 14); const p = g.attributes.position;
+      for (let k = 0; k < p.count; k++) {
+        const x = p.getX(k), y = p.getY(k), r = Math.hypot(x, y), th = Math.atan2(y, x);
+        p.setZ(k, .16 * r * Math.sin(th * 7 + i) + .08 * Math.sin(r * 14 + th * 3) * r);
+      }
+      g.computeVertexNormals();
+      const m = new T.Mesh(g, new T.MeshStandardMaterial({ color: i % 2 ? 0x7fb83c : 0x6aa52e, roughness: .5, side: T.DoubleSide }));
+      m.scale.set(R(1.15, 1.45), R(.8, 1), 1);
+      add(m, 1, [R(-.7, .7), .22 + i * .01, R(-.25, .25)], [flat, 0, R(0, 3)],
+        [R(-1.2, 1.2), LY[1] + R(-.12, .12), R(-.5, .5)], [flat + R(.7, 1), R(-.3, .3), R(0, 3)]);
+    }
+    const tomSide = new T.MeshStandardMaterial({ color: 0xd0301f, roughness: .3 });
+    const tomTop = new T.MeshStandardMaterial({ map: tomTex, roughness: .28 });
+    for (let i = 0; i < 5; i++) {
+      const m = new T.Mesh(new T.CylinderGeometry(.5, .5, .1, 48), [tomSide, tomTop, tomTop]);
+      add(m, 2, [-.8 + i * .4, .36 + (i % 2) * .02, R(-.2, .2)], [0, R(0, 6), 0],
+        [-1.35 + i * .66 + R(-.1, .1), LY[2] + R(-.12, .12), R(-.45, .45)], [R(.8, 1.1), R(0, 6), R(-.3, .3)]);
+    }
+    const onionMat = new T.MeshStandardMaterial({ color: 0xe6cfe0, roughness: .28 });
+    for (let i = 0; i < 9; i++) {
+      const g = new T.Group();
+      const a = new T.Mesh(new T.TorusGeometry(R(.3, .42), .042, 10, 48), onionMat); a.scale.z = .55; g.add(a);
+      if (i % 2) { const b = new T.Mesh(new T.TorusGeometry(.2, .03, 8, 36), onionMat); b.scale.z = .5; g.add(b); }
+      add(g, 3, [R(-.9, .9), .46 + (i % 3) * .02, R(-.3, .3)], [flat, 0, 0],
+        [R(-1.4, 1.4), LY[3] + R(-.12, .12), R(-.5, .5)], [flat + R(.6, 1.2), R(-.3, .3), R(0, 3)]);
+    }
+    const cabMat = new T.MeshStandardMaterial({ color: 0x8e2f73, roughness: .3 });
+    for (let i = 0; i < 16; i++) {
+      const pts = []; const n = 6, len = R(.8, 1.3), ph = R(0, 6);
+      for (let k = 0; k <= n; k++) pts.push(new T.Vector3((k / n - .5) * len, .06 * Math.sin(k * 1.2 + ph), .14 * Math.sin(k * 1.7 + ph)));
+      const m = new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts), 24, .032, 6, false), cabMat);
+      add(m, 4, [R(-.7, .7), .53 + (i % 3) * .02, R(-.3, .3)], [0, R(0, 6), 0],
+        [R(-1.4, 1.4), LY[4] + R(-.14, .14), R(-.5, .5)], [R(.2, .7), R(0, 6), R(-.6, .6)]);
+    }
+    const sauce = new T.Group(); const sauceMeshes = [];
+    function sauceTube(color, off, ph) {
+      const pts = [];
+      for (let k = 0; k <= 11; k++) pts.push(new T.Vector3(-1.1 + k * .2, .0, off + (k % 2 ? .22 : -.22) * Math.sin(ph + k * .3 + 1)));
+      const geo = new T.TubeGeometry(new T.CatmullRomCurve3(pts), 140, .05, 8, false);
+      const mesh = new T.Mesh(geo, new T.MeshStandardMaterial({ color, roughness: .15 })); mesh.userData.count = geo.index.count;
+      sauce.add(mesh); sauceMeshes.push(mesh);
+    }
+    sauceTube(0xf6f2e8, -.12, 0); sauceTube(0xc61f12, .16, 2);
+    add(sauce, 5, [0, .6, 0], [0, 0, 0], [0, LY[5], 0], [.5, 0, 0]);
+
+    /* the bun: a real photo-scanned model (Poly Haven, CC0), cut in two with a clipping plane */
+    function useBun(geometry, material) {
+      geometry = geometry.clone(); geometry.computeBoundingBox();
+      let bb = geometry.boundingBox;
+      geometry.translate(-(bb.min.x + bb.max.x) / 2, -bb.min.y, -(bb.min.z + bb.max.z) / 2);
+      geometry.computeBoundingBox(); bb = geometry.boundingBox;
+      const S = 4 / (bb.max.x - bb.min.x), ym = bb.max.y * .5;
+      BW = 4; BD = (bb.max.z - bb.min.z) * S / 2;
+      const Y = ym * S;
+      const mk = (keepAbove) => {
+        const m = material.clone(); const lp = new T.Plane(new T.Vector3(0, keepAbove ? 1 : -1, 0), keepAbove ? -ym : ym);
+        m.clippingPlanes = [new T.Plane()]; m.side = T.DoubleSide;
+        const mesh = new T.Mesh(geometry, m); mesh.scale.setScalar(S); mesh.castShadow = true; mesh.receiveShadow = true;
+        clipPairs.push({ mesh, lp, wp: m.clippingPlanes[0] });
+        return mesh;
+      };
+      const bm = mk(false); bm.position.y = -Y; bottom.add(bm);
+      const rx = (bb.max.x - bb.min.x) / 2 * S * .93, rz = (bb.max.z - bb.min.z) / 2 * S * .93;
+      const bf = new T.Mesh(new T.CircleGeometry(1, 64), crumbMat); bf.rotation.x = -Math.PI / 2; bf.position.y = .004; bf.scale.set(rx, rz, 1); bf.receiveShadow = true; bottom.add(bf);
+      hinge.position.set(0, 0, -BD * .92);
+      const tm = mk(true); tm.position.set(0, -Y, BD * .92); hinge.add(tm);
+      const tf = new T.Mesh(new T.CircleGeometry(1, 64), crumbMat); tf.rotation.x = Math.PI / 2; tf.position.set(0, -.004, BD * .92); tf.scale.set(rx, rz, 1); hinge.add(tf);
+      floor.position.y = -Y - .001;
+    }
+    function fallbackBun() {
+      const crust = crustTexture();
+      const mat = new T.MeshStandardMaterial({ map: crust, bumpMap: crust, bumpScale: 1.4, roughness: .55 });
+      const SX = 1.9, SZ = .95; BD = SZ;
+      const bm = new T.Mesh(new T.SphereGeometry(1, 64, 28, 0, TAU, Math.PI / 2, Math.PI / 2), mat); bm.scale.set(SX, .62, SZ); bm.castShadow = true; bm.receiveShadow = true; bottom.add(bm);
+      const bf = new T.Mesh(new T.CircleGeometry(1, 64), crumbMat); bf.rotation.x = -Math.PI / 2; bf.position.y = .002; bf.scale.set(SX, SZ, 1); bottom.add(bf);
+      hinge.position.set(0, 0, -SZ);
+      const tm = new T.Mesh(new T.SphereGeometry(1, 64, 28, 0, TAU, 0, Math.PI / 2), mat); tm.scale.set(SX, .9, SZ); tm.position.z = SZ; tm.castShadow = true; tm.receiveShadow = true; hinge.add(tm);
+      const tf = new T.Mesh(new T.CircleGeometry(1, 64), crumbMat); tf.rotation.x = Math.PI / 2; tf.position.set(0, -.002, SZ); tf.scale.set(SX, SZ, 1); hinge.add(tf);
+      floor.position.y = -.62;
+    }
+    function finish() { ready = true; readyCbs.forEach(f => f()); readyCbs = []; }
+    if (T.GLTFLoader && window.BUN_GLTF) {
+      try {
+        new T.GLTFLoader().parse(JSON.stringify(window.BUN_GLTF), '', (g) => {
+          let mesh = null; g.scene.traverse(o => { if (o.isMesh && o.name === 'hamburger_buns_02') mesh = o; });
+          if (!mesh) g.scene.traverse(o => { if (o.isMesh && !mesh) mesh = o; });
+          mesh ? useBun(mesh.geometry, mesh.material) : fallbackBun(); finish();
+        }, () => { fallbackBun(); finish(); });
+      } catch (e) { fallbackBun(); finish(); }
+    } else { fallbackBun(); finish(); }
+
+    let fx = null, W = 2, Hh = 2;
+    function fit(cam, A) {
+      const t = Math.tan(cam.fov * Math.PI / 360);
+      const wFrac = A < .8 ? .66 : (dish ? 1.5 : .36);
+      cam.userData.D = Math.max(4.2 / (wFrac * 2 * t * A), dish ? 0 : (7.2 / (2 * t)));
+    }
+    function resize() {
+      const host = canvas.parentElement;
+      W = Math.max(2, host.clientWidth); Hh = Math.max(2, host.clientHeight);
+      let dpr = Math.min(window.devicePixelRatio || 1, 2);
+      while (W * Hh * dpr * dpr > 3.0e6 && dpr > 1) dpr -= .25;
+      renderer.setPixelRatio(dpr); renderer.setSize(W, Hh, false);
+      camera.aspect = W / Hh; fit(camera, W / Hh); camera.updateProjectionMatrix();
+      if (fx) { fx.composer.setPixelRatio && fx.composer.setPixelRatio(dpr); fx.composer.setSize(W, Hh); }
+    }
+    resize();
+    fx = makeFX(renderer, scene, camera, W, Hh);
+    if (fx) fx.composer.setSize(W, Hh);
+
+    let spinA = .4;
+    function render(p, time, dt, still) {
+      if (!ready) return;
+      spinA += still ? 0 : dt * (dish ? .5 : .2);
+      let open;
+      if (dish) { open = .42; p = 0; } else open = sstep(.1, .32, p) * (1 - sstep(.92, 1, p));
+      root.rotation.y = dish ? spinA : (still ? .45 : .35 * Math.sin(p * 4.5) + spinA * .35);
+      hinge.rotation.x = -open * 1.1; hinge.position.y = open * .1;
+      root.updateMatrixWorld(true);
+      clipPairs.forEach(c => { c.wp.copy(c.lp).applyMatrix4(c.mesh.matrixWorld); });
+      let expl = 0;
+      items.forEach(it => {
+        let a = 0;
+        if (!dish) {
+          const out = sstep(.26 + it.d, .56 + it.d, p), inn = Math.pow(sstep(.64 + it.d * .6, .84 + it.d * .6, p), 2);
+          a = out * (1 - inn);
+        }
+        expl = Math.max(expl, a);
+        const bob = still ? 0 : Math.sin(time * 1.1 + it.ph) * .07 * a;
+        it.m.position.set(lerp(it.rest.x, it.ex.x, a), lerp(it.rest.y, it.ex.y, a) + bob, lerp(it.rest.z, it.ex.z, a));
+        it.m.rotation.set(lerp(it.restRot.x, it.exRot.x, a), lerp(it.restRot.y, it.exRot.y, a) + (still ? 0 : time * .2 * a), lerp(it.restRot.z, it.exRot.z, a));
+        it.m.scale.setScalar(it.m.userData.s0 * (1 + .08 * a));
+      });
+      const rv = dish ? 1 : sstep(.4, .64, p);
+      sauceMeshes.forEach(m => m.geometry.setDrawRange(0, Math.floor(m.userData.count * rv / 6) * 6));
+      // steam rising from the open bread
+      const hot = dish ? .6 : Math.max(open, expl) * (1 - sstep(.9, 1, p));
+      steam.forEach(s => {
+        const u = s.userData, t = ((still ? .35 : time) * u.sp + u.o) % 1;
+        s.position.set(u.x + Math.sin(t * 6 + u.ph) * u.sw * t, .3 + t * 4.2, u.z);
+        const sc = .6 + t * 1.6; s.scale.set(sc, sc, 1);
+        s.material.opacity = hot * .055 * Math.sin(Math.PI * t);
+      });
+      bokeh.forEach(b => { const u = b.userData; b.position.x = u.x + (still ? 0 : Math.sin(time * u.sp + u.ph) * .6); b.position.y = u.y + (still ? 0 : Math.cos(time * u.sp * .8 + u.ph) * .4); });
+      // slow dolly + orbit tied to scroll
+      const D = camera.userData.D * (dish ? 1 : 1.04 - .16 * sstep(0, .5, p));
+      const ty = dish ? .5 : lerp(.3, 2.1, sstep(.2, .5, p) * (1 - sstep(.74, .95, p) * .9));
+      const orb = dish ? 0 : (p - .5) * .5;
+      camera.position.set(Math.sin(orb) * D, ty + 1 + (dish ? 3.2 : 0), Math.cos(orb) * D); camera.lookAt(0, ty, 0);
+      if (fx) { fx.grade.uniforms.time.value = still ? 3.3 : time; fx.composer.render(); } else renderer.render(scene, camera);
+    }
+    return { render, resize, whenReady(f) { ready ? f() : readyCbs.push(f); } };
+  }
+
+  window.GLK = { bread };
+})();
+</script>
+<script>
+/* live thing: build the order, get the total and a pre-filled WhatsApp link */
+const eur=n=>'€'+n.toFixed(2).replace('.',',');
+const steps=[...document.querySelectorAll('.step')];
+const qty={};
+const tray=document.getElementById('tray');
+function render(){
+  let sum=0,lines=[];
+  steps.forEach(s=>{const q=qty[s.dataset.id]||0;s.querySelector('output').textContent=q;const c=s.closest('.mcard');if(c)c.classList.toggle('sel',q>0);
+    if(q>0){sum+=q*+s.dataset.price;lines.push(q+'x '+s.dataset.name)}});
+  const mode=tray.elements.mode.value, saus=tray.elements.saus.value;
+  let fee=0; if(mode==='bezorgen'&&sum>0&&sum<15) fee=2.5;
+  const total=sum+fee;
+  document.getElementById('sum').textContent=eur(total);
+  const shown=lines.length?lines.join('\n')+(fee?'\nBezorgkosten 1x':'' ):'Kies hierboven wat je wilt eten.';
+  document.getElementById('lines').textContent=shown;
+  let msg='Hallo Kebab Anatolia, ik wil graag bestellen.';
+  if(lines.length){msg='Hallo Kebab Anatolia, ik wil graag bestellen:\n'+lines.map(l=>'- '+l).join('\n')+'\nSaus: '+saus+'\n'+(mode==='bezorgen'?'Bezorgen':'Afhalen')+'\nTotaal: '+eur(total)}
+  document.getElementById('wa').href='https://wa.me/31600000000?text='+encodeURIComponent(msg);
+}
+steps.forEach(s=>s.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const id=s.dataset.id;qty[id]=Math.max(0,Math.min(20,(qty[id]||0)+(b.classList.contains('p')?1:-1)));render()}));
+tray.addEventListener('change',render);
+render();
+
+/* open or closed, in Dutch time */
+(function(){
+  const H=[[12,22],[11,22],[11,22],[11,22],[11,22],[11,23],[11,23]]; /* zo..za */
+  const names=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
+  try{
+    const p=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Amsterdam',weekday:'short',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(new Date()).map(x=>[x.type,x.value]));
+    const d=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(p.weekday), t=(+p.hour%24)+(+p.minute)/60;
+    const [o,c]=H[d]; const rows=document.querySelectorAll('#hours dt,#hours dd');
+    const idx=((d+6)%7)*2; rows[idx].classList.add('today');rows[idx+1].classList.add('today');
+    const el=document.getElementById('now');
+    if(t>=o&&t<c) el.textContent='Nu open, tot '+c+'.00 uur.';
+    else if(t<o) el.textContent='Nu gesloten, we openen vandaag om '+o+'.00 uur.';
+    else {const n=(d+1)%7; el.textContent='Nu gesloten, we openen morgen ('+names[n]+') om '+H[n][0]+'.00 uur.'}
+  }catch(e){}
+})();
+
+/* entrances */
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.12});
+document.querySelectorAll('.in').forEach(el=>io.observe(el));
+
+/* scroll story: one loop, writes progress into CSS variables */
+const still=matchMedia('(prefers-reduced-motion: reduce)');
+const clamp=v=>Math.max(0,Math.min(1,v));
+const scenes=[...document.querySelectorAll('[data-scene]')];
+const pars=[...document.querySelectorAll('[data-par]')];
+const order=document.querySelector('[data-order]'), foot=document.querySelector('[data-foot]');
+const disp=document.getElementById('disp'), saus=document.getElementById('saus');
+function frame(){
+  const vh=innerHeight;
+  if(!still.matches){
+    scenes.forEach(s=>{const r=s.getBoundingClientRect(); if(r.bottom<-50||r.top>vh+50) return; s.style.setProperty('--p',clamp(-r.top/Math.max(1,r.height-vh)).toFixed(4))});
+    pars.forEach(f=>{const r=f.getBoundingClientRect(); f.style.setProperty('--r',clamp((vh-r.top)/(vh+r.height)).toFixed(4))});
+    if(order){const r=order.getBoundingClientRect(); order.style.setProperty('--e',clamp((vh*.95-r.top)/(vh*.8)).toFixed(4))}
+    if(foot){const r=foot.getBoundingClientRect(); foot.style.setProperty('--p',clamp((vh-r.top)/(vh*.5)).toFixed(4))}
+    if(disp&&saus){const r=saus.getBoundingClientRect(); if(r.bottom>0&&r.top<vh){const p=clamp(-r.top/Math.max(1,r.height-vh)); disp.setAttribute('scale',(8+34*Math.abs(Math.sin(p*22))*Math.min(1,p*6)).toFixed(1))}}
+  }
+  glFrame();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+/* footage: slow the fire, play the slicing only when seen, vignette */
+const hv=document.querySelector('.hero-vid'),ha=document.querySelector('.hero-amb'),sv=document.querySelector('.frame video');
+[hv,ha].forEach(v=>{if(!v)return;v.playbackRate=.65;if(still.matches){v.pause();v.removeAttribute('autoplay')}});
+if(sv){if(still.matches){sv.removeAttribute('loop')}else new IntersectionObserver(es=>es.forEach(x=>{x.isIntersecting?sv.play().catch(()=>{}):sv.pause()}),{threshold:.2}).observe(sv)}
+function drawVig(){const c=document.querySelector('.vig');if(!c)return;const w=c.width=c.clientWidth,h=c.height=c.clientHeight,g=c.getContext('2d');const r=g.createRadialGradient(w/2,h*.48,Math.min(w,h)*.28,w/2,h*.5,Math.hypot(w,h)*.58);r.addColorStop(0,'rgba(10,6,4,0)');r.addColorStop(1,'rgba(10,6,4,.82)');g.fillStyle=r;g.fillRect(0,0,w,h)}
+drawVig();addEventListener('resize',drawVig);
+/* three.js scenes */
+const gls=[];
+function mk(id,fn,hostSel){const c=document.getElementById(id),h=document.querySelector(hostSel);if(!c||!h)return;try{const o=fn(c);gls.push({o,h,c,id});o.whenReady&&o.whenReady(()=>{if(still.matches)stillOne({o,id})});h.classList.add('gl-ok');c.classList.add('on')}catch(e){console.warn(id,e)}}
+function initGL(){
+  if(!window.THREE||!window.GLK)return;
+  try{const t=document.createElement('canvas');if(!(t.getContext('webgl')||t.getContext('experimental-webgl')))return}catch(e){return}
+  mk('gl-fill',c=>GLK.bread(c,'fill'),'.fill');mk('gl-dish',c=>GLK.bread(c,'dish'),'.dish');
+  stillFrames();
+}
+function pOf(g){if(g.id==='gl-dish')return 0;const r=g.h.getBoundingClientRect();return clamp(-r.top/Math.max(1,r.height-innerHeight))}
+function stillOne(g){g.o.render(g.id==='gl-fill'?.5:0,0,0,true)}
+function stillFrames(){gls.forEach(stillOne)}
+let lastT=performance.now()/1000;
+function glFrame(){
+  const now=performance.now()/1000,dt=Math.min(.05,now-lastT);lastT=now;
+  if(still.matches||window.__freeze)return;
+  gls.forEach(g=>{const r=g.h.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;g.o.render(pOf(g),now,dt,false)});
+}
+addEventListener('resize',()=>{gls.forEach(g=>g.o.resize());if(still.matches)stillFrames()});
+addEventListener('load',initGL);
+</script>
+</body>
+</html>
