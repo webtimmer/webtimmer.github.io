@@ -1,0 +1,403 @@
+﻿<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Loodgieter Van Wijk · Ede — voorbeeldsite</title>
+<!--
+  WEBTIMMER TEMPLATE — swap per client:
+  1. Colours: --ground / --paper / --ink / --accent below
+  2. Name, town, phone, WhatsApp, email, address, hours: search "Van Wijk", "Ede", "612345678"
+  3. Prices: ticket section + the P object in the script
+  4. Photos in ../assets + credits line in the footer
+  5. Letter in "Over ons": the owner's own words
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#110D0A; --ground-2:#1B1511;
+  --paper:#1E1713; --paper-2:#2A201A;
+  --ink:#EEEAE6; --ink-soft:#B8AA9A;
+  --accent:#D8B04C; --accent-ink:#1A170B;   /* brass, like the fittings */
+  --steel:#D8B04C; --bone:#EEEAE6;
+  --display:"Anton",Impact,sans-serif; --text:"Archivo",system-ui,sans-serif; --cut:28px;
+  --s-small:.875rem; --s-body:clamp(1.0625rem,1.02rem + .25vw,1.25rem);
+  --s-lead:clamp(1.25rem,1.1rem + .7vw,1.625rem);
+  --s-head:clamp(2.75rem,1.4rem + 5vw,6.5rem);
+  --s-huge:clamp(3.75rem,1.5rem + 9vw,11rem);
+  --m:clamp(20px,3vw,40px);
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--ground);color:var(--bone);font:400 var(--s-body)/1.5 var(--text);-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{display:block;max-width:100%;height:auto}
+p{max-width:60ch}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:0;line-height:.9}
+.chamfer,.bon,.sheet,.t-main,.letter,.card{clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)))}
+img{filter:sepia(.35) saturate(1.15) contrast(1.1)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 24px;background:var(--accent);color:var(--accent-ink);font:600 var(--s-body)/1 var(--text);text-decoration:none;border:0;cursor:pointer;transition:transform .2s,background .2s}
+.btn:hover{background:#E6C467;transform:translateY(-2px)}
+.btn:active{transform:translateY(1px)}
+.btn.dark{background:var(--ink);color:#0A0F11}
+.btn.dark:hover{background:#fff}
+
+/* bar */
+.bar{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:20px var(--m);gap:16px}
+.mark{font:800 1.375rem/1 var(--display);text-decoration:none}
+.bar nav{display:flex;gap:28px}
+.bar nav a{text-decoration:none;font-weight:600}
+.bar nav a:hover{text-decoration:underline;text-underline-offset:4px}
+
+/* 1 hero: pinned, the werkbon slides onto the photo */
+.hero{height:170svh;position:relative}
+.hero-stage{position:sticky;top:0;height:100svh;overflow:hidden;display:grid;grid-template-columns:1fr minmax(0,560px);align-items:end;gap:var(--m);padding:110px var(--m) var(--m)}
+.hero-title{position:relative;align-self:center;transform:translateY(calc(var(--p,0) * -12vh))}.hero-title h1{font-size:var(--s-huge);color:#fff}.hero-title h1 span{display:block}.hero-title .lead{font-size:var(--s-lead);line-height:1.35;max-width:32ch;margin-top:28px}
+.hero-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.4) saturate(1.25) contrast(1.15) brightness(.5);transform:scale(calc(1.3 - .3 * var(--p,0)));will-change:transform}
+.bon{position:relative;width:100%;background:var(--paper);color:var(--ink);padding:36px 36px 40px;
+  transform:translateY(calc((1 - var(--p,0)) * 6vh)) rotate(calc((1 - var(--p,0)) * -2.5deg));transform-origin:50% 100%;will-change:transform;}
+.bon h1{font-size:var(--s-huge);margin-bottom:36px}
+.bon .lead{font-size:var(--s-lead);line-height:1.35;max-width:32ch;margin-bottom:36px}
+.bon fieldset{border:0;padding:0}
+.bon legend{font-weight:600;margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.chips label{position:relative}
+.chips input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.chips span{display:inline-block;padding:12px 18px;background:var(--paper-2);font-weight:600;transition:background .15s,color .15s,transform .15s}
+.chips label:hover span{transform:translateY(-2px)}
+.chips input:checked+span{background:var(--accent);color:var(--accent-ink)}
+.chips input:focus-visible+span{outline:3px solid var(--ink);outline-offset:2px}
+.answer{background:var(--paper-2);padding:20px 22px;margin-bottom:20px;min-height:100px}
+.answer b{display:block;font:800 var(--s-lead)/1.1 var(--display);margin-bottom:6px}
+.answer.flip{animation:flip .35s ease}
+@keyframes flip{from{opacity:.2;transform:translateY(8px)}}
+.acts{display:flex;flex-wrap:wrap;gap:10px}
+
+/* 2 services: sheets stack like werkbonnen on a clipboard */
+.sec{padding:clamp(120px,14vw,200px) var(--m) 0}
+.sec>h2{font-size:var(--s-head);margin-bottom:48px}
+.stack{position:relative}
+.sheet{position:sticky;height:82svh;min-height:560px;display:grid;grid-template-columns:minmax(0,560px) 1fr;overflow:hidden;margin-bottom:28px;
+  transform:scale(calc(1 - .06 * var(--q,0)));transform-origin:50% 0;filter:brightness(calc(1 - .35 * var(--q,0)))}
+.sheet:nth-child(1){top:24px}.sheet:nth-child(2){top:100px}.sheet:nth-child(3){top:176px}.sheet:nth-child(4){top:252px}
+.sheet{background:var(--ground-2);color:var(--bone)}
+.sheet .txt{position:relative;z-index:1;background:linear-gradient(90deg,rgba(17,13,10,.9) 55%,rgba(17,13,10,0));padding:20px 120px 44px 40px;display:grid;grid-template-rows:auto 1fr auto;gap:32px}.sheet .jobs{align-self:start;margin-top:8px}
+.sheet h3{font-size:clamp(2rem,1.4rem + 1.4vw,2.75rem);color:var(--accent)}
+.sheet .price{font-weight:600;margin-top:12px}
+
+.jobs{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:8px}.jobs li{padding:8px 14px;background:rgba(255,255,255,.1);font-weight:600}
+.sheet figure{position:absolute;inset:0;overflow:hidden}
+.sheet img{width:100%;height:115%;object-fit:cover;filter:sepia(.4) saturate(1.2) contrast(1.1) brightness(.62);transform:translateY(calc(-12% * var(--r,0)))}
+
+/* 3 how it works: vertical scroll drives a horizontal row */
+.how{height:320svh;position:relative;margin-top:clamp(120px,14vw,200px)}
+.how-stage{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:0 var(--m);gap:32px}
+.how-head{display:flex;justify-content:space-between;align-items:end;gap:24px}
+.how-head h2{font-size:var(--s-head)}
+.bar6{height:6px;background:var(--ground-2)}
+.bar6 i{display:block;height:100%;background:var(--accent);transform-origin:0 50%;transform:scaleX(var(--p,0))}
+.track{display:flex;gap:40px;transform:translateX(calc(var(--p,0) * var(--dist,0px) * -1));will-change:transform}
+.moment{flex:0 0 min(420px,80vw);display:grid;grid-template-columns:1fr;gap:16px}
+.moment b{font:800 clamp(1.75rem,1.2rem + 1.2vw,2.25rem)/1 var(--display)}
+.moment p{color:var(--ink-soft)}
+.moment img{aspect-ratio:4/3;object-fit:cover;width:100%;filter:saturate(.75) brightness(.8)}
+.moment:nth-child(even){margin-top:80px}
+
+/* 4 price ticket */
+.ticket-wrap{background:var(--steel);padding:clamp(110px,12vw,180px) var(--m);overflow:hidden}
+.ticket-wrap h2{font-size:var(--s-head);color:var(--accent-ink);margin:0 auto 48px;width:min(1100px,100%)}
+.ticket{position:relative;width:min(1100px,100%);margin:0 auto;display:grid;grid-template-columns:7fr 3fr;color:var(--ink);
+  transform:translateX(calc((1 - var(--p,1)) * 30vw)) rotate(calc((1 - var(--p,1)) * 5deg))}
+.t-main,.t-stub{background:var(--paper)}
+.t-main{padding:44px}
+.t-main h3{font-size:clamp(2rem,1.2rem + 2.6vw,3.25rem);margin-bottom:40px}
+.t-main ul{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:16px 32px}
+.t-main li b{display:block}
+.t-stub{display:flex;flex-direction:column;justify-content:space-between;text-align:center;padding-top:44px;border-left:6px dotted var(--steel);
+  transform:translateX(calc(var(--t,0) * 40px)) rotate(calc(var(--t,0) * 4deg));transform-origin:0 100%}
+.t-stub .p{font:800 clamp(3rem,2rem + 4vw,5.5rem)/1 var(--display)}
+.t-stub .unit{display:block;margin-top:8px}
+.t-stub .btn{width:100%;min-height:56px;margin-top:32px}
+
+/* 5 letter with a slower photo behind */
+.letter-wrap{padding:clamp(120px,14vw,200px) var(--m);display:grid;grid-template-columns:5fr 6fr;gap:clamp(32px,6vw,96px);align-items:start;max-width:1320px;margin:0 auto}
+.letter-wrap figure{overflow:hidden;aspect-ratio:4/5;position:sticky;top:40px}
+.letter-wrap figure img{width:100%;height:120%;object-fit:cover;filter:saturate(.7) brightness(.75);transform:translateY(calc(-16% * var(--r,0)))}
+.letter{background:var(--paper);color:var(--ink);padding:56px}
+.letter h2{font-size:var(--s-head);margin-bottom:28px}
+.letter p{margin-bottom:1em}
+.letter mark{background:var(--accent);color:var(--accent-ink);padding:0 .15em}
+.sign{font-weight:600;font-size:var(--s-lead);margin-top:28px}
+.sign span{display:block;font-weight:400;font-size:var(--s-body);color:var(--ink-soft)}
+
+/* 6 faq */
+.faq{padding:0 var(--m) clamp(120px,14vw,200px);display:grid;grid-template-columns:3fr 9fr;gap:32px;max-width:1320px;margin:0 auto}
+.faq h2{font-size:var(--s-head)}
+.faq .cols{columns:2;column-gap:56px}
+.faq p{break-inside:avoid;margin-bottom:20px;color:var(--ink-soft)}
+.faq p b{color:var(--bone);font-weight:600}
+
+/* 7 contact: card stays, photo moves under it */
+.contact{position:relative;height:150svh}
+.contact-stage{position:sticky;top:0;height:100svh;overflow:hidden;padding:60px var(--m) 72px}
+.contact-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.4) saturate(1.2) contrast(1.1) brightness(.45);transform:scale(calc(1.15 - .15 * var(--p,0))) translateX(calc(var(--p,0) * -3%))}
+.contact-stage{display:grid;grid-template-columns:1fr minmax(0,420px);align-items:end;gap:var(--m)}
+.closing{position:relative;font-size:clamp(4rem,1rem + 10vw,13rem);white-space:nowrap;color:#fff;transform:translateY(calc((1 - var(--p,0)) * 10vh))}
+.card{position:relative;align-self:start;width:min(420px,100%);background:var(--paper);color:var(--ink);padding:32px 32px 0}
+.card h3{font-size:2.25rem;margin-bottom:20px}
+.card dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:20px 0;font-variant-numeric:tabular-nums}
+.card dd{text-align:right}
+.card .btn{width:calc(100% + 64px);margin:12px -32px 0;min-height:56px}
+
+/* 8 footer: the back of the werkbon */
+footer{background:var(--ground-2);padding:110px var(--m) 32px}
+.back{max-width:1100px;margin:0 auto;background:var(--paper);color:var(--ink);padding:80px 56px 28px;display:grid;grid-template-columns:1fr 1fr;gap:40px;
+  transform:translateY(calc((1 - var(--p,1)) * 80px));
+  -webkit-mask:radial-gradient(circle 50px at 50px 0,#0000 98%,#000) top/100px 100% repeat-x;mask:radial-gradient(circle 50px at 50px 0,#0000 98%,#000) top/100px 100% repeat-x}
+.back h2{font-size:var(--s-head);margin-bottom:16px}
+.back address{font-style:normal;display:grid;gap:12px;align-content:start}
+.back address a{text-underline-offset:4px}
+.imprint{grid-column:1/-1;font-size:var(--s-small);color:var(--ink-soft);max-width:75ch}
+
+/* entrances */
+.js .in{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0ms)}
+.js .in.on{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  .js .in{opacity:1;transform:none;transition:none}
+  .hero-photo,.bon,.sheet,.sheet img,.ticket,.t-stub,.letter-wrap figure img,.contact-stage img,.back{transform:none!important}
+  .hero,.contact{height:auto}.hero-stage,.contact-stage{position:relative}
+  .how{height:auto}.how-stage{position:relative;height:auto;padding:0 var(--m)}.track{transform:none;flex-wrap:wrap}.moment:nth-child(even){margin-top:0}
+  .answer.flip{animation:none}
+}
+
+/* tablet + phone */
+@media (max-width:900px){
+  .contact-stage{grid-template-columns:1fr;align-content:end}.closing{font-size:14vw;transform:none}
+  .how{height:auto}.how-stage{position:relative;height:auto}
+  .track{transform:none!important;flex-direction:column}.moment{flex-basis:auto}.moment:nth-child(even){margin-top:0}
+  .bar6{display:none}
+  .letter-wrap{grid-template-columns:1fr}.letter-wrap figure{position:relative;top:0}
+  .faq{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .bar nav{display:none}
+  .bar .btn{min-height:44px;padding:0 16px}
+  .hero-stage{grid-template-columns:1fr;padding:84px 16px 16px;align-content:end}.hero-title h1{font-size:17vw}
+  .bon{padding:36px 22px 48px}
+
+  .sheet{grid-template-columns:1fr;height:auto;min-height:72svh}
+  .sheet:nth-child(1){top:16px}.sheet:nth-child(2){top:66px}.sheet:nth-child(3){top:116px}.sheet:nth-child(4){top:166px}
+  .sheet figure{position:relative;aspect-ratio:16/9}.sheet .txt{background:var(--ground-2);padding:16px 20px 28px}
+  .sheet .txt{padding:16px 20px 28px}
+  .sheet h3{font-size:1.5rem}
+  .ticket{grid-template-columns:1fr}
+  .t-main{padding:28px 22px 48px}
+  .t-main ul{grid-template-columns:1fr}
+  .t-stub{order:-1;border-left:0;border-bottom:6px dotted var(--steel);padding-top:28px}.t-stub .btn{margin-top:20px}
+  .letter{padding:28px 22px}
+  .faq .cols{columns:1}
+  .contact{height:auto}.contact-stage{position:relative;height:auto;padding:0}
+  .contact-stage img{position:relative;height:60svh}
+  .contact-stage{grid-template-columns:1fr}.closing{position:absolute;left:16px;top:20vh;font-size:20vw;z-index:0}.card{z-index:1}.card{margin:-80px 16px 0;width:auto}
+  .back{grid-template-columns:1fr;padding:64px 22px 24px;-webkit-mask-size:60px 100%;mask-size:60px 100%;
+    -webkit-mask-image:radial-gradient(circle 30px at 30px 0,#0000 98%,#000);mask-image:radial-gradient(circle 30px at 30px 0,#0000 98%,#000)}
+}
+</style>
+</head>
+<body>
+<script>document.body.classList.add('js')</script>
+<main>
+  <header class="bar">
+    <a class="mark" href="#top">Van Wijk</a>
+    <nav aria-label="Hoofdmenu"><a href="#diensten">Diensten</a><a href="#prijzen">Prijzen</a><a href="#contact">Contact</a></nav>
+    <a class="btn" href="tel:+31600000000">Bel 06 00 00 00 00</a>
+  </header>
+
+  <section class="hero" id="top" data-scene>
+    <div class="hero-stage">
+      <img class="hero-photo" src="../assets/propane-torch-soldering-copper-pipe.jpg" alt="Koperen leiding wordt gesoldeerd met een brander" width="1920" height="1280">
+      <div class="hero-title">
+        <h1>Loodgieter <span>Van Wijk</span></h1>
+        <p class="lead">Lekkage, verstopping of storing aan de cv. In Ede en 15 km eromheen, meestal nog dezelfde dag.</p>
+      </div>
+      <div class="bon">
+        <form id="pick" onsubmit="return false">
+          <fieldset>
+            <legend>Wat is er aan de hand?</legend>
+            <div class="chips">
+              <label><input type="radio" name="p" value="lek" checked><span>Lekkage</span></label>
+              <label><input type="radio" name="p" value="verstopt"><span>Verstopping</span></label>
+              <label><input type="radio" name="p" value="cv"><span>Cv-ketel</span></label>
+              <label><input type="radio" name="p" value="bad"><span>Badkamer of toilet</span></label>
+            </div>
+          </fieldset>
+          <div class="answer" id="answer" aria-live="polite"><b id="a-when">Vandaag nog, vaak binnen 2 uur</b><span id="a-what">Water dicht, lek opsporen en repareren. Voorrijden €45, daarna €62,50 per uur.</span></div>
+          <div class="acts">
+            <a class="btn dark" href="tel:+31600000000">Bel direct</a>
+            <a class="btn" id="wa" href="https://wa.me/31600000000?text=Hallo%2C%20ik%20heb%20een%20lekkage.">Stuur een WhatsApp</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="diensten">
+    <h2 class="in">Waar we voor komen</h2>
+    <div class="stack">
+      <article class="sheet" data-sheet>
+        <div class="txt"><h3>Lekkage</h3><ul class="jobs"><li>Kraan</li><li>Leiding</li><li>Plafond</li><li>Wasmachine</li></ul><div><p>Druppelende kraan, natte plek in het plafond of een gesprongen leiding. We zetten eerst het water dicht en zoeken dan waar het vandaan komt.</p><p class="price">Meestal binnen het eerste uur klaar.</p></div></div>
+        <figure><img src="../assets/tap-water.webp" alt="Druppel water aan een kraan" loading="lazy" width="1024" height="683"></figure>
+      </article>
+      <article class="sheet" data-sheet>
+        <div class="txt"><h3>Verstopping</h3><ul class="jobs"><li>Gootsteen</li><li>Toilet</li><li>Douche</li><li>Riool</li></ul><div><p>Gootsteen, douche, toilet of de afvoer onder de vloer. Met de veer en zo nodig de hogedrukspuit, zonder breekwerk.</p><p class="price">Vaste prijs vanaf €95, voorrijden inbegrepen.</p></div></div>
+        <figure><img src="../assets/plumbers-snake-24689.jpg" alt="Ontstoppingsveer van een loodgieter" loading="lazy" width="1917" height="1437"></figure>
+      </article>
+      <article class="sheet" data-sheet>
+        <div class="txt"><h3>Cv-ketel</h3><ul class="jobs"><li>Storing</li><li>Druk bijvullen</li><li>Radiatoren</li><li>Onderhoud</li></ul><div><p>Ketel op storing, druk te laag of radiatoren die niet warm worden. Onderhoud kan ook, één keer per jaar, en dan bellen wij jou.</p><p class="price">Onderhoudsbeurt €89.</p></div></div>
+        <figure><img src="../assets/plumber-at-work.jpg" alt="Loodgieter aan het werk onder een gootsteen" loading="lazy" width="1920" height="1440"></figure>
+      </article>
+      <article class="sheet" data-sheet>
+        <div class="txt"><h3>Badkamer en toilet</h3><ul class="jobs"><li>Toilet</li><li>Douche</li><li>Kranen</li><li>Hele badkamer</li></ul><div><p>Nieuw toilet, kraan of douche, of de hele badkamer. Je krijgt vooraf een prijs op papier en we houden ons eraan.</p><p class="price">Offerte binnen 3 werkdagen, gratis.</p></div></div>
+        <figure><img src="../assets/propane-torch-soldering-copper-pipe.jpg" alt="Koperen leiding wordt gesoldeerd" loading="lazy" width="1920" height="1280"></figure>
+      </article>
+    </div>
+  </section>
+
+  <section class="how" id="werkwijze" data-scene>
+    <div class="how-stage">
+      <div class="how-head"><h2>Zo gaat het</h2></div>
+      <div class="bar6" aria-hidden="true"><i></i></div>
+      <div class="track">
+        <div class="moment"><b>Je belt of appt</b><p>Je vertelt wat er is. Een foto via WhatsApp helpt, dan weten we wat we mee moeten nemen.</p><img src="../assets/tap-water.webp" alt="" loading="lazy" width="1024" height="683" style="object-position:70% 50%"></div>
+        <div class="moment"><b>We spreken een tijd af</b><p>Bij spoed nog dezelfde dag. Anders kies je zelf een dag, ook 's avonds tot 20.00.</p><img src="../assets/propane-torch-soldering-copper-pipe.jpg" alt="" loading="lazy" width="1920" height="1280" style="object-position:60% 50%"></div>
+        <div class="moment"><b>Eerst de prijs</b><p>Ter plekke hoor je wat het kost, voordat we beginnen. Geen verrassingen achteraf.</p><img src="../assets/plumber-at-work.jpg" alt="" loading="lazy" width="1920" height="1440" style="object-position:30% 50%"></div>
+        <div class="moment"><b>Opgelost en opgeruimd</b><p>Je betaalt met pin of tikkie en krijgt de factuur dezelfde dag per mail.</p><img src="../assets/plumbers-snake-24689.jpg" alt="" loading="lazy" width="1917" height="1437" style="object-position:40% 50%"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ticket-wrap" id="prijzen">
+    <h2 class="in">Wat het kost</h2>
+    <div class="ticket" data-ticket>
+      <div class="t-main">
+        <h3>Reparatie aan huis</h3>
+        <ul>
+          <li><b>Uurtarief</b>€62,50, per kwartier gerekend</li>
+          <li><b>Avond en weekend</b>+50%, alleen bij spoed</li>
+          <li><b>Onderdelen</b>Tegen inkoopprijs, je ziet de bon</li>
+          <li><b>Betalen</b>Pin of tikkie, alles incl. btw</li>
+        </ul>
+      </div>
+      <div class="t-stub">
+        <p><span class="p">€45</span><span class="unit">voorrijden in Ede</span></p>
+        <a class="btn dark" href="tel:+31600000000">Bel voor een afspraak</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="letter-wrap" id="over">
+    <figure data-par><img src="../assets/plumber-at-work.jpg" alt="Loodgieter aan het werk" loading="lazy" width="1920" height="1440"></figure>
+    <div class="letter in">
+      <h2>Over ons</h2>
+      <p>Ik ben Mark van Wijk en ik ben sinds 2009 loodgieter in Ede. Eerst bij een groot installatiebedrijf, sinds 2016 voor mezelf.</p>
+      <p>Wat ik daar leerde: mensen willen vooral weten waar ze aan toe zijn. Dus <mark>je hoort de prijs voordat ik begin</mark>, en als het goedkoper kan, zeg ik dat ook.</p>
+      <p>Ik werk met één vaste collega, Ruben. Je krijgt dus altijd een van ons twee aan de deur, geen onderaannemer.</p>
+      <p>Bel gerust, ook als je twijfelt of het iets voor een loodgieter is. Vaak kan ik het je aan de telefoon al zeggen.</p>
+      <p class="sign">Mark van Wijk<span>Eigenaar, erkend installateur</span></p>
+    </div>
+  </section>
+
+  <section class="faq" id="vragen">
+    <h2 class="in">Vragen</h2>
+    <div class="cols">
+      <p class="in"><b>Komen jullie ook buiten Ede?</b> Ja, in Bennekom, Wageningen, Lunteren, Veenendaal en Barneveld. Daar is het voorrijden €55.</p>
+      <p class="in" style="--d:60ms"><b>Hoe snel zijn jullie er bij spoed?</b> Overdag meestal binnen 2 uur. 's Avonds en in het weekend binnen 4 uur.</p>
+      <p class="in" style="--d:120ms"><b>Moet ik zelf het water afsluiten?</b> Bij een lekkage wel, als het kan. De hoofdkraan zit meestal bij de watermeter in de meterkast.</p>
+      <p class="in" style="--d:180ms"><b>Krijg ik garantie?</b> Ja, 12 maanden op het werk en de onderdelen die wij plaatsen.</p>
+      <p class="in" style="--d:240ms"><b>Betaal ik ook als het niet lukt?</b> Alleen het voorrijden en de tijd die we bezig waren, nooit meer.</p>
+      <p class="in" style="--d:300ms"><b>Doen jullie ook huurwoningen?</b> Ja. Vaak moet de verhuurder het betalen, vraag het eerst na bij je verhuurder.</p>
+      <p class="in" style="--d:360ms"><b>Kan ik pinnen?</b> Ja, met pin of tikkie, direct na afloop.</p>
+      <p class="in" style="--d:420ms"><b>Is cv-onderhoud nodig?</b> Eén keer per jaar houdt de ketel langer mee en voorkomt storing in de winter.</p>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" data-scene>
+    <div class="contact-stage">
+      <img src="../assets/plumbers-snake-24689.jpg" alt="Gereedschap van de loodgieter" loading="lazy" width="1917" height="1437">
+      <h2 class="closing">Bel <br>Van Wijk</h2>
+      <div class="card in">
+        <h3>Bel of kom langs</h3>
+        <p>Proefstraat 12<br>6711 AB Ede</p>
+        <dl><dt>Ma – vr</dt><dd>7.30 – 20.00</dd><dt>Zaterdag</dt><dd>9.00 – 16.00</dd><dt>Spoed</dt><dd>dag en nacht</dd></dl>
+        <p><a href="tel:+31600000000">06 00 00 00 00</a><br><a href="mailto:info@example.com">info@example.com</a></p>
+        <a class="btn" href="tel:+31600000000">Bel nu</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="back" data-foot>
+    <div>
+      <h2>Tot snel</h2>
+      <p>Lekt er iets of loopt er iets niet door? Bel ons, dan kijken we samen wat er nodig is.</p>
+    </div>
+    <address>
+      <a href="tel:+31600000000">06 00 00 00 00</a>
+      <a href="mailto:info@example.com">info@example.com</a>
+      <a href="#contact">Proefstraat 12, Ede</a>
+      <span>KvK 00000000</span>
+    </address>
+    <p class="imprint">Voorbeeldsite door Webtimmer, fictief bedrijf. Foto's: "Propane torch soldering copper pipe" door neffk, CC BY 2.0; "Plumber at work" door rick (Flickr), CC BY 2.0; "Plumbers snake 24689" door Walter Siegmund, CC BY 2.5; "Tap water" via rawpixel, CC0. Via Wikimedia Commons en Openverse.</p>
+  </div>
+</footer>
+
+<script>
+/* live thing: pick the problem, get time + price + a pre-filled WhatsApp */
+const P={
+  lek:{w:'Vandaag nog, vaak binnen 2 uur',t:'Water dicht, lek opsporen en repareren. Voorrijden €45, daarna €62,50 per uur.',m:'ik heb een lekkage.'},
+  verstopt:{w:'Vandaag of morgen',t:'Ontstoppen met veer of hogedrukspuit. Vaste prijs vanaf €95, voorrijden inbegrepen.',m:'ik heb een verstopping.'},
+  cv:{w:'Bij storing binnen 4 uur',t:'Storing verhelpen of druk bijvullen. Voorrijden €45, onderhoudsbeurt €89.',m:'mijn cv-ketel doet het niet.'},
+  bad:{w:'Offerte binnen 3 werkdagen',t:'We komen kijken en meten op, gratis. Je krijgt de prijs op papier.',m:'ik wil iets laten doen aan mijn badkamer of toilet.'}
+};
+const ans=document.getElementById('answer');
+document.getElementById('pick').addEventListener('change',e=>{
+  const p=P[e.target.value]; if(!p) return;
+  document.getElementById('a-when').textContent=p.w;
+  document.getElementById('a-what').textContent=p.t;
+  document.getElementById('wa').href='https://wa.me/31600000000?text='+encodeURIComponent('Hallo, '+p.m);
+  ans.classList.remove('flip'); void ans.offsetWidth; ans.classList.add('flip');
+});
+
+/* entrances */
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.15});
+document.querySelectorAll('.in').forEach(el=>io.observe(el));
+
+/* scroll scenes: one loop, writes progress into CSS variables */
+const still=matchMedia('(prefers-reduced-motion: reduce)');
+const clamp=v=>Math.max(0,Math.min(1,v));
+const scenes=[...document.querySelectorAll('[data-scene]')];
+const sheets=[...document.querySelectorAll('[data-sheet]')];
+const pars=[...document.querySelectorAll('[data-par], .sheet figure')];
+const ticket=document.querySelector('[data-ticket]'), foot=document.querySelector('[data-foot]');
+const track=document.querySelector('.track');
+function frame(){
+  const vh=innerHeight;
+  if(!still.matches){
+    scenes.forEach(s=>{const r=s.getBoundingClientRect(); s.style.setProperty('--p',clamp(-r.top/Math.max(1,r.height-vh)).toFixed(4))});
+    if(track) track.style.setProperty('--dist',Math.max(0,track.scrollWidth-track.parentElement.clientWidth)+'px');
+    sheets.forEach((s,i)=>{const n=sheets[i+1]; if(!n) return; const a=n.getBoundingClientRect().top, b=s.getBoundingClientRect().top; s.style.setProperty('--q',clamp(1-(a-b)/vh).toFixed(4))});
+    pars.forEach(f=>{const r=f.getBoundingClientRect(); f.style.setProperty('--r',clamp((vh-r.top)/(vh+r.height)).toFixed(4))});
+    if(ticket){const r=ticket.getBoundingClientRect(); ticket.style.setProperty('--p',clamp((vh-r.top)/(vh*.6)).toFixed(4)); ticket.style.setProperty('--t',clamp((vh*.35-r.top)/(vh*.5)).toFixed(4))}
+    if(foot){const r=foot.getBoundingClientRect(); foot.style.setProperty('--p',clamp((vh-r.top)/(vh*.5)).toFixed(4))}
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
